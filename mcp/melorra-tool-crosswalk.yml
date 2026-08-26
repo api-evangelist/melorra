@@ -1,0 +1,87 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  mcp/melorra-mcp.yml (candidate tools) bound to openapi/melorra-catalog-api-openapi.yml operations.
+status: candidate
+summary: >-
+  A crosswalk between the candidate MCP tool set and the REST operations that back it. Because
+  Melorra publishes no MCP server and no GraphQL surface, this maps a proposed agent surface onto the
+  one real contract rather than reconciling two shipped surfaces. Every binding is high confidence
+  because each candidate tool was defined FROM its operation.
+surfaces:
+  openapi:
+    path: openapi/melorra-catalog-api-openapi.yml
+    gated: false
+    note: >-
+      API Evangelist-generated from Melorra's published api-catalog and live probes; Melorra
+      publishes no OpenAPI of its own.
+  graphql:
+    endpoint: null
+    gated: false
+    note: Probed https://www.melorra.com/graphql (404) and https://services-catalog.melorra.com/graphql (404). No GraphQL surface.
+  mcp:
+    url: null
+    gated: false
+    note: No MCP server exists. Tools below are candidates, not live.
+crosswalk:
+- tool: search_jewellery
+  category: search
+  rest:
+  - listProducts
+  binding: one-to-one
+  confidence: high
+  note: >-
+    Inherits the trend, set_name, wear_type, type, special_price__range and page parameters as its
+    input schema. special_price__range should be excluded from a real tool until the 500 is fixed.
+- tool: get_product
+  category: read
+  rest:
+  - getProductBySku
+  binding: one-to-one
+  confidence: high
+  note: Input schema is the single required integer path parameter sku.
+- tool: find_similar_jewellery
+  category: recommendation
+  rest:
+  - listSimilarProducts
+  binding: one-to-one
+  confidence: high
+  note: >-
+    Backed by the single endpoint the API root advertises three times, under the names products,
+    recommended and similar.
+- tool: list_product_details
+  category: read
+  rest:
+  - listProductDetails
+  binding: one-to-one
+  confidence: high
+- tool: search_silver_jewellery
+  category: search
+  rest:
+  - listSilverProducts
+  binding: one-to-one
+  confidence: high
+  note: >-
+    A separate tool rather than a parameter, because Melorra models silver as a parallel endpoint
+    rather than a material filter.
+- tool: list_endpoints
+  category: discovery
+  rest:
+  - getApiRoot
+  binding: one-to-one
+  confidence: high
+mcp_only: []
+rest_only:
+- operation: listSilverProductDetails
+  reason: >-
+    Folded into list_product_details conceptually but left unbound — a 165-record silver detail
+    projection did not warrant its own candidate tool. Recorded so the operation is not silently
+    dropped.
+coverage:
+  rest_operations: 7
+  rest_operations_bound: 6
+  rest_only: 1
+  mcp_tools: 6
+  mcp_tools_bound: 6
+  mcp_only: 0
+  graphql_fields: 0

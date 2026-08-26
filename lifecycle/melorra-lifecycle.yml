@@ -1,0 +1,64 @@
+generated: '2026-08-25'
+method: probed
+source: >-
+  live probes of Melorra's website, status/changelog/developer paths and the catalog API, 2026-08-25.
+summary: >-
+  Melorra publishes no API lifecycle commitments of any kind — no versioning policy, no deprecation
+  policy, no sunset signalling, no changelog, no SLA and no status page. The API is real, public and
+  useful, but a consumer has no published basis on which to depend on it.
+versioning:
+  policy_published: false
+  scheme: none
+  in_path: false
+  header: none
+  detail: >-
+    The published api-catalog document declares "version": "1.0.0" for itself, but no version appears
+    in any path, header or media type, so a consumer cannot pin, negotiate or detect a version change.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  detail: >-
+    No Deprecation or Sunset response header observed. No deprecation policy page found. No operation
+    in the derived OpenAPI is marked deprecated because the provider marks none.
+status_page:
+  published: false
+  probes:
+  - url: https://status.melorra.com/
+    status: 0
+    result: DNS does not resolve.
+  - url: https://www.melorra.com/status
+    status: 404
+  - url: https://melorra.statuspage.io/
+    status: 200
+    result: >-
+      SOFT-404 / NOT A MELORRA PAGE. Redirects to https://www.atlassian.com/software/statuspage, the
+      Atlassian Statuspage marketing site. The body contains zero occurrences of "Melorra" and
+      /api/v2/summary.json 302s to statuspage.io. Recorded here explicitly so a future pass does not
+      re-probe this URL, see a 200, and credit Melorra with a status page it does not operate.
+changelog:
+  published: false
+  probes:
+  - url: https://www.melorra.com/changelog
+    status: 404
+sla:
+  published: false
+  detail: No API SLA, uptime commitment or support tier is published for the catalog API.
+support:
+  channel: https://www.melorra.com/contactus/
+  detail: >-
+    General retail customer care only. There is no developer support channel, no forum, and no
+    documented contact for API consumers specifically.
+stability_assessment:
+  grade: undocumented
+  detail: >-
+    The API is undocumented as a product. It is reachable and stable in observation, but Melorra
+    makes no public commitment to keep any endpoint, field or shape in place, and offers no channel
+    on which a breaking change would be announced. Treat every field as subject to silent change.
+corporate:
+  note: >-
+    In January 2026 Senco Gold approved acquiring a controlling 68% stake in August Jewellery Pvt
+    Ltd, the company behind Melorra. An ownership change of this kind is a material lifecycle risk
+    for an undocumented, uncommitted API surface.

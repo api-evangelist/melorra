@@ -1,0 +1,60 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/melorra-catalog-api-openapi.yml and live error responses observed on
+  https://services-catalog.melorra.com/api 2026-08-25.
+format: drf
+rfc9457: false
+envelope:
+  shape: object
+  fields:
+  - name: detail
+    type: string
+    description: Human-readable error message. The only error-bearing field.
+  - name: currency
+    type: object
+    description: Echoed on errors as well as successes.
+  - name: conversion_rates
+    type: object
+    description: Echoed on errors as well as successes.
+  note: >-
+    This is the stock Django REST Framework error envelope. It carries no machine-readable error
+    code, no type URI and no remediation hint, so an agent can only branch on the HTTP status and
+    string-match the detail text.
+problem_types:
+- status: 404
+  title: Not found
+  detail_observed: Not found.
+  content_type: application/json
+  when: >-
+    A SKU that does not exist is requested from /product/products/{sku}/. Verified with sku
+    999999999.
+  remediation: >-
+    Confirm the SKU from a listing response before requesting detail. SKUs are integers in the
+    ext_product_id / sku fields of ProductSummary.
+  machine_readable_code: false
+- status: 500
+  title: Internal server error
+  content_type: text/html
+  when: >-
+    Observed on two distinct paths — (1) /product/products/?special_price__range=10000,20000, the
+    provider's own documented example value for its documented filter; (2) /product/product/{sku}/,
+    a per-SKU detail path on the richer projection, which errors rather than 404s or 200s.
+  remediation: >-
+    Avoid special_price__range until the provider fixes it; filter on price client-side from the
+    listing payload. For per-SKU detail use /product/products/{sku}/, which works, not
+    /product/product/{sku}/, which does not.
+  machine_readable_code: false
+  note: >-
+    500 responses are served as an HTML Django error page, not JSON, so an agent that assumes a JSON
+    body on every response will fail to parse the error rather than handle it.
+- status: 404
+  title: Unrouted path
+  content_type: text/html
+  when: Any path not routed by the catalog backend, e.g. /api/, /api/product/categories/.
+  remediation: Enumerate the real endpoints from the API root index at /api/product/.
+  machine_readable_code: false
+gaps:
+- No error code registry is published.
+- No RFC 9457 application/problem+json representation is offered.
+- Error content type is inconsistent — 404 on a routed path is JSON, 500 is HTML.

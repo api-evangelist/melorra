@@ -1,0 +1,42 @@
+generated: '2026-08-25'
+method: probed
+source: >-
+  live unauthenticated requests to https://services-catalog.melorra.com/api/* on 2026-08-25, plus
+  Melorra's published /.well-known/api-catalog which documents no authentication requirement.
+summary: >-
+  The Melorra Catalog API requires NO authentication. Every documented and advertised endpoint
+  returned 200 to an anonymous GET with no API key, token, cookie or signed header. The OpenAPI
+  description carries no securitySchemes because the provider imposes none — this is an absence
+  that was verified, not one that was assumed.
+schemes: []
+model:
+  type: none
+  anonymous_access: true
+  credentials_required: false
+  verified_anonymous:
+  - url: https://services-catalog.melorra.com/api/product/products/?page=1
+    status: 200
+  - url: https://services-catalog.melorra.com/api/product/products/232484/
+    status: 200
+  - url: https://services-catalog.melorra.com/api/product/product/
+    status: 200
+  - url: https://services-catalog.melorra.com/api/product/similar/
+    status: 200
+oauth:
+  supported: false
+  discovery_probed:
+  - url: https://services-catalog.melorra.com/.well-known/oauth-authorization-server
+    status: 404
+  - url: https://services-catalog.melorra.com/.well-known/openid-configuration
+    status: 404
+notes:
+- >-
+  There is no developer signup, key issuance, or plan gate in front of this API. The consumer-facing
+  https://www.melorra.com/sign-in/ page is a retail shopper account, not an API credential surface.
+- >-
+  Because access is anonymous, there is no per-key attribution and therefore no per-key rate limit
+  or quota an agent can reason about. See rate-limits/melorra-rate-limits.yml.
+- >-
+  The response headers set X-Frame-Options DENY, X-Content-Type-Options nosniff, Referrer-Policy
+  same-origin and Cross-Origin-Opener-Policy same-origin, and Vary includes Origin — but no CORS
+  Access-Control-Allow-Origin was returned to an anonymous cross-origin-less request.

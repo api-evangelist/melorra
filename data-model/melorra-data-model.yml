@@ -1,0 +1,127 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/melorra-catalog-api-openapi.yml ($ref graph) plus id-bearing fields observed in live
+  responses from https://services-catalog.melorra.com/api, 2026-08-25.
+summary: >-
+  A shallow, denormalized catalog model. There is exactly one addressable entity — Product — and
+  everything else is either an embedded value object on a product or a facet computed over the
+  product set. Nothing else is independently retrievable: there is no /sets/, /trends/ or
+  /categories/ endpoint, so collections, trends and categories exist only as strings on products.
+entities:
+- name: Product
+  addressable: true
+  endpoints:
+  - GET /product/products/
+  - GET /product/products/{sku}/
+  - GET /product/product/
+  - GET /product/similar/
+  identifiers:
+  - field: sku
+    type: integer
+    role: primary
+    note: The path key for /product/products/{sku}/. Example 232484.
+  - field: ext_product_id
+    type: integer
+    role: alternate
+    note: A second integer id, also embedded in the site product URL path.
+  - field: code
+    type: string
+    role: variant
+    note: >-
+      Full variant code, e.g. C22CC117F-XX-12-109Y00 — design_code, then a size segment, then a
+      karat segment. This is the code that actually identifies a buyable variant.
+  - field: design_code
+    type: string
+    role: design
+    note: The design family, e.g. C22CC117F. Shared across all karats and sizes of one design.
+- name: ProductDetail
+  addressable: true
+  endpoints:
+  - GET /product/product/
+  note: >-
+    Not a separate entity so much as a richer projection of Product, wrapping pricing, product_data,
+    images, breadcrumb and media_base_path. Keyed by the same design/variant codes.
+- name: SilverProduct
+  addressable: true
+  endpoints:
+  - GET /product/products_silver/
+  - GET /product/product_silver/
+  note: >-
+    Same shape as Product, served by parallel endpoints rather than by a filter on the main
+    collection. A modelling split, not a schema difference — 165 records versus 21,742.
+value_objects:
+- name: KaratOption
+  parent: Pricing
+  note: Map keyed by "9 Karat".."24 Karat", each with title, weight, is_available and product_code.
+- name: SizeOption
+  parent: Pricing
+  note: >-
+    Ring/bangle sizes with diameter, circumference, weight_change_percent and per-karat quick-ship
+    and express stock counts.
+- name: ShippingData
+  parent: ProductData
+  note: Manufacturing, hallmarking, processing and transit day counts and delivery date ranges.
+- name: Collection
+  parent: ProductData
+  note: name, season_name, trend_name, collection_link and banners.
+- name: Seo
+  parent: ProductData
+  note: meta_title and meta_description.
+- name: ProductImages
+  parent: Product
+  note: >-
+    Arrays of RELATIVE paths only. They must be joined to base_image_path / base_video_path, which
+    are returned in a sibling member of the response, not on the product itself.
+- name: Breadcrumb
+  parent: Product
+  note: Ordered value/link pairs describing the site navigation path to the product.
+- name: Currency
+  note: code and symbol. Echoed on every response including errors.
+- name: ConversionRates
+  note: Advisory INR conversion rates for USD, GBP, SGD, AED. Echoed on every response.
+relationships:
+- from: Product
+  to: KaratOption
+  type: has_many
+  via: pricing.karat
+- from: Product
+  to: SizeOption
+  type: has_many
+  via: pricing.size
+- from: Product
+  to: ProductImages
+  type: has_one
+  via: images
+- from: Product
+  to: Collection
+  type: belongs_to
+  via: product_data.collection.name
+  note: Soft reference by name string only; collections are not addressable.
+- from: Product
+  to: Product
+  type: has_many
+  via: GET /product/similar/?sku={sku}
+  note: >-
+    The only true inter-entity relationship the API exposes, and it is an endpoint rather than a
+    field. available_in_cluster is present on every product but was empty in all observed records.
+- from: Product
+  to: ShippingData
+  type: has_one
+  via: product_data.shipping_data
+soft_references:
+  note: >-
+    trend, set_name, set_code, category_name, wear_type, nav_menu, occasion, motif and base_colour
+    are all free-text strings on the product. Each one is also returned as a facet with counts in the
+    listing response's filters block, which is the only way to enumerate their legal values — there
+    is no lookup endpoint for any of them.
+join_hazards:
+- >-
+  Image paths are unusable without the base path from a sibling response member. A consumer that
+  stores products alone loses the ability to render them.
+- >-
+  price and special_price appear on the summary record but the karat/size matrix that determines the
+  actual buyable price lives only on the ProductDetail projection, which is not retrievable per SKU
+  (GET /product/product/{sku}/ returns 500). To get variant pricing for one product an agent must
+  page the full detail collection.
+render: none

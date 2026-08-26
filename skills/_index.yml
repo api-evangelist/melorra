@@ -1,0 +1,28 @@
+generated: '2026-08-25'
+method: generated
+source: >-
+  Authored from openapi/melorra-catalog-api-openapi.yml and conventions/melorra-conventions.yml.
+  Every operationId referenced was verified to exist in the spec.
+api: Melorra Catalog API
+note: >-
+  Melorra publishes no agent skills, no AGENTS.md and no developer guide of its own. These are API
+  Evangelist-authored operating instructions grounded in real operationIds and in behaviour verified
+  on the wire on 2026-08-25 — including the failure modes, which is most of their value here.
+skills:
+- name: melorra-browse-jewellery-catalog
+  file: melorra-browse-jewellery-catalog.md
+  description: >-
+    Search and page the catalog with faceted filters, read the non-obvious response shape, and avoid
+    the documented filter that returns 500.
+  operations:
+  - listProducts
+  - getApiRoot
+- name: melorra-lookup-product-and-variants
+  file: melorra-lookup-product-and-variants.md
+  description: >-
+    Resolve a SKU to a product, then to its karat/size variant matrix, stock counts and shipping
+    lead times, working around the per-SKU detail route that returns 500.
+  operations:
+  - getProductBySku
+  - listProductDetails
+  - listSimilarProducts

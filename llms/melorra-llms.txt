@@ -1,0 +1,27 @@
+# Melorra - Modern Jewellery for the Modern Woman
+
+Melorra is a fashion-forward jewellery brand that designs trendy, lightweight, and affordable gold and diamond jewellery inspired by international fashion trends.
+
+## Core Resources
+- Website: https://www.melorra.com
+- API Catalog: https://www.melorra.com/.well-known/api-catalog
+- LLM Index: https://www.melorra.com/llms.txt
+- Sitemaps: https://www.melorra.com/category-sitemap.xml/
+- Markdown Support: Send `Accept: text/markdown` header to get a clean markdown version of any page.
+
+## Product Categories
+- Rings: Trendy designs for every day.
+- Earrings: Modern studs, hoops, and danglers.
+- Pendants: Minimalist and chic gold pendants.
+- Bangles & Bracelets: Fashion-inspired wristwear.
+- Necklaces: Elegant yet lightweight necklaces.
+
+## Policies
+- 15-Day Returns: Hassle-free returns.
+- Lifetime Exchange: Value for your jewellery forever.
+- BIS Hallmarked: 100% certified gold.
+- SGL/IGI Certified: Authentic diamonds and gemstones.
+
+## Technical Metadata
+- Content-Signal: ai-train=no, search=yes, ai-input=yes
+- Agent Ready: True

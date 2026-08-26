@@ -1,0 +1,98 @@
+generated: '2026-08-25'
+method: searched
+source: >-
+  registry.npmjs.org (search + per-package metadata), pypi.org, rubygems.org, crates.io and
+  repo.packagist.org, queried 2026-08-25.
+summary: >-
+  Melorra publishes five first-party npm packages under the @melorra scope, all of them internal
+  design-system libraries rather than clients for the catalog API. There is NO client SDK for the
+  Melorra Catalog API in any language, from Melorra or anyone else. Every package below last shipped
+  in 2023 and none has reached a 0.1 release.
+sdk_for_api: false
+sdk_note: >-
+  These are deliberately NOT wired as a `SDKs` pointer in apis.yml. They are UI component, theme,
+  schema and type packages for Melorra's own storefront, not API client libraries, and crediting
+  them as API SDKs would misrepresent what a developer integrating the catalog API can pick up.
+packages:
+- language: javascript
+  registry: npm
+  name: '@melorra/component'
+  url: https://www.npmjs.com/package/@melorra/component
+  install: npm install @melorra/component
+  official: true
+  kind: design-system
+  version: 0.0.9
+  published: '2023-11-16'
+  license: ISC
+  repository: ssh://git@github.com:MelorraTech/design-component.git
+  note: >-
+    Design component library. Repository is private (git+ssh to the MelorraTech org, which has 0
+    public repos), so the source behind the published artifact is not inspectable.
+- language: javascript
+  registry: npm
+  name: '@melorra/theme'
+  url: https://www.npmjs.com/package/@melorra/theme
+  install: npm install @melorra/theme
+  official: true
+  kind: design-system
+  version: 0.0.3
+  published: '2023-11-08'
+  license: ISC
+  repository: git+ssh://git@github.com/MelorraTech/design-component.git
+  note: Theme SDK for the component library.
+- language: javascript
+  registry: npm
+  name: '@melorra/schema'
+  url: https://www.npmjs.com/package/@melorra/schema
+  install: npm install @melorra/schema
+  official: true
+  kind: design-system
+  version: 0.0.3
+  published: '2023-11-08'
+  license: ISC
+  repository: git+ssh://git@github.com/MelorraTech/design-component.git
+  note: Component schemas for the type package.
+- language: javascript
+  registry: npm
+  name: '@melorra/platform'
+  url: https://www.npmjs.com/package/@melorra/platform
+  install: npm install @melorra/platform
+  official: true
+  kind: design-system
+  version: 0.0.2
+  published: '2023-10-19'
+  license: ISC
+  repository: git+ssh://git@github.com/MelorraTech/design-platform.git
+- language: javascript
+  registry: npm
+  name: '@melorra/types'
+  url: https://www.npmjs.com/package/@melorra/types
+  install: npm install @melorra/types
+  official: true
+  kind: design-system
+  version: 0.0.2
+  published: '2023-10-13'
+  license: ISC
+  repository: ssh://git@github.com:MelorraTech/design-type.git
+ownership_evidence: >-
+  All five are published by the npm maintainer `soumya-melorra` under the @melorra scope and declare
+  repositories in the github.com/MelorraTech organization, which exists (HTTP 200) and is Melorra's
+  engineering org. That is a consistent first-party chain, so official: true is justified.
+registries_checked_no_result:
+- registry: pypi
+  query: melorra
+  status: 404
+- registry: rubygems
+  query: melorra
+  status: 404
+- registry: crates.io
+  query: melorra
+  status: 403
+  note: crates.io rejected the unauthenticated request; treated as unchecked rather than absent.
+- registry: packagist
+  query: melorra/melorra
+  status: 404
+currency_finding: >-
+  The newest first-party package shipped 2023-11-16, roughly two and a half years before this probe.
+  Every one is pre-0.1. Combined with a MelorraTech GitHub org carrying zero public repositories,
+  Melorra's public developer-facing code presence is dormant even though its catalog API is live.

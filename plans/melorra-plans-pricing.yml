@@ -1,0 +1,25 @@
+generated: '2026-08-25'
+method: searched
+source: >-
+  https://www.melorra.com/ , https://www.melorra.com/.well-known/api-catalog and
+  https://www.melorra.com/llms.txt — searched 2026-08-25 for any API plan, tier, quota or pricing.
+plan_count: 0
+plans: []
+summary: >-
+  Melorra sells jewellery, not API access. There are no API plans, tiers, quotas, free allowances or
+  paid upgrades, because the catalog API is served anonymously to anyone with no account, no key and
+  no commercial relationship. This is a plan_count of 0 that means "free and open", not "enterprise
+  contact-us gate".
+commercial_model:
+  api_monetized: false
+  access: anonymous-public
+  gate: none
+  signup_required: false
+  detail: >-
+    The pricing visible on melorra.com is retail product pricing for jewellery (quoted in INR with
+    advisory USD/GBP/SGD/AED conversion rates echoed by the API), not pricing for API consumption.
+    The sign-in page at https://www.melorra.com/sign-in/ is a shopper account, not a developer
+    account.
+note: >-
+  Recorded deliberately rather than omitted. An absent plans artifact is indistinguishable from an
+  unchecked one; this records that the check ran and that the correct answer is zero.

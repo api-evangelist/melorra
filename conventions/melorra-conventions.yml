@@ -1,0 +1,142 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/melorra-catalog-api-openapi.yml, Melorra's published
+  https://www.melorra.com/.well-known/api-catalog, and live response headers and bodies observed
+  2026-08-25.
+summary: >-
+  A read-only Django REST Framework catalog API. Anonymous access, PageNumberPagination, a DRF
+  error envelope, and no runtime rate-limit signalling. The provider documents its pagination
+  contract in its own api-catalog document, but the live surface diverges from that contract on two
+  of the six endpoints.
+authentication:
+  style: none
+  detail: Anonymous. See authentication/melorra-authentication.yml.
+pagination:
+  style: page-number
+  declared_by_provider: true
+  provider_statement: >-
+    "All list responses are paginated. The response object contains 'count', 'next', 'previous', and
+    'results'. The actual data is always inside the 'results' field." — /.well-known/api-catalog
+  params:
+  - name: page
+    description: 1-based page number.
+  - name: size
+    description: Page size. Observed echoed as size=20 in the next link on /product/similar/.
+  response_fields:
+  - count
+  - next
+  - previous
+  - results
+  default_page_size: 20
+  divergences:
+  - endpoint: /product/products/
+    issue: >-
+      results is an OBJECT wrapping base_image_path, base_video_path, title, breadcrumb and a
+      products[] array — not the array a consumer would expect from the stated contract. An agent
+      following the published contract literally reads results as the data and gets a dict.
+  - endpoint: /product/similar/
+    issue: >-
+      There is no results member at all. The products[] array and the media base paths sit at the
+      TOP level alongside count/next/previous, directly contradicting the provider's stated "the
+      actual data is always inside the 'results' field".
+  - endpoint: /product/product/
+    issue: results is an ARRAY of rich detail objects, a third shape across the same API.
+filtering:
+  style: query-parameter
+  documented_params:
+  - trend
+  - set_name
+  - wear_type
+  - type
+  - special_price__range
+  faceting: >-
+    /product/products/ returns a filters block with per-facet value lists and result counts (karat,
+    special_price, gender, weight, wear_type, base_colour, type, nav_menu, try_on, occasion, motif),
+    which is a genuinely agent-friendly way to discover the legal filter values.
+  broken_documented_filters:
+  - param: special_price__range
+    documented_example: '10000,20000'
+    observed_status: 500
+    note: The provider's own documented example value returns a server error.
+  - param: trend
+    documented_example: Classic
+    observed_status: 200
+    observed_count: 0
+    note: The documented example value matches no products.
+sorting:
+  style: query-parameter
+  discovery: >-
+    The legal sort keys are published in the response body itself and via HTTP OPTIONS on
+    /product/products/ — sort+by+rank, sort+by+popular, sort+by+latest, sort+by+discount,
+    sort+by+price+high+to+low, sort+by+price+low+to+high, sort+by+quickship.
+versioning:
+  scheme: none-in-path
+  detail: >-
+    No version segment in the path and no version header observed. The api-catalog document declares
+    version 1.0.0 for itself, but nothing in the HTTP surface carries or negotiates a version, so a
+    consumer cannot pin one.
+error_envelope:
+  format: drf
+  rfc9457: false
+  shape: '{"detail": "<message>", "currency": {...}, "conversion_rates": {...}}'
+  detail: See errors/melorra-problem-types.yml.
+request_id_tracing:
+  supported: false
+  detail: No X-Request-Id, traceparent or equivalent correlation header observed on any response.
+rate_limit_signaling:
+  supported: false
+  detail: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After headers observed. See
+    rate-limits/melorra-rate-limits.yml.
+content_negotiation:
+  renders:
+  - application/json
+  - text/html
+  detail: >-
+    Reported by HTTP OPTIONS on /product/products/. text/html is the DRF browsable API renderer.
+  markdown_claim:
+    claimed_by_provider: true
+    provider_statement: >-
+      "Markdown Support: Send `Accept: text/markdown` header to get a clean markdown version of any
+      page." — https://www.melorra.com/llms.txt
+    verified: false
+    observed:
+      url: https://www.melorra.com/jewellery/
+      request_header: 'Accept: text/markdown'
+      status: 500
+      body: Internal Server Error
+    note: >-
+      This is an agent-facing capability Melorra advertises in its llms.txt that the edge does not
+      serve. An agent that trusts the llms.txt and negotiates markdown gets a 500, not a fallback.
+currency:
+  detail: >-
+    Every response echoes currency {code: INR, symbol} and a conversion_rates map (USD, GBP, SGD,
+    AED). Prices are integers in INR. The conversion rates are advisory — the API does not accept a
+    currency parameter, so an agent must convert client-side.
+idempotency:
+  supported: na
+  detail: >-
+    Not applicable. The API is read-only — the server advertises Allow: GET, HEAD, OPTIONS and no
+    write operation exists on any advertised endpoint. There is nothing to double-fire, so
+    idempotency keys have no meaning here.
+dry_run_mode:
+  supported: na
+  detail: Not applicable. No write surface to rehearse.
+reversibility:
+  grade: na
+  detail: >-
+    Not applicable. The Melorra Catalog API exposes no write, mutation or state-changing operation —
+    every advertised endpoint is a GET and the server refuses anything else (Allow: GET, HEAD,
+    OPTIONS). An agent calling this API cannot take an action that would need taking back, so there
+    is no reversal path to document and no window to state.
+  write_surfaces: []
+  verified:
+    method: HTTP OPTIONS and Allow header on https://services-catalog.melorra.com/api/product/products/
+    allow_header: 'GET, HEAD, OPTIONS'
+cross_links:
+  errors: errors/melorra-problem-types.yml
+  lifecycle: lifecycle/melorra-lifecycle.yml
+  authentication: authentication/melorra-authentication.yml
+  rate_limits: rate-limits/melorra-rate-limits.yml
+  data_model: data-model/melorra-data-model.yml

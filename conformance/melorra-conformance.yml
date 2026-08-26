@@ -1,0 +1,114 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  openapi/melorra-catalog-api-openapi.yml, live headers and bodies from
+  https://services-catalog.melorra.com/api, Melorra's /.well-known/api-catalog and
+  https://www.melorra.com/llms.txt and /robots.txt, observed 2026-08-25.
+summary: >-
+  A plain JSON-over-HTTP read API. It conforms to no cross-cutting API standard and declares no
+  domain standard for the jewellery or retail market. The one standards-adjacent thing Melorra does
+  publish is agent-facing: an llms.txt and a Content-Signal declaration in robots.txt.
+conformance:
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No oauth2 securityScheme; /.well-known/oauth-authorization-server returned 404 on both hosts. The
+    API is anonymous.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 on both hosts.
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    Errors use the Django REST Framework envelope {"detail": "..."} with content-type
+    application/json; no application/problem+json is offered. 500s are served as HTML.
+- id: json:api
+  conforms: false
+  evidence: >-
+    No application/vnd.api+json media type; the payload shape is DRF pagination, not a JSON:API
+    document.
+- id: odata
+  conforms: false
+  evidence: No $metadata surface; no OData query options accepted.
+- id: pagination
+  conforms: false
+  level: partial
+  evidence: >-
+    Django REST Framework PageNumberPagination is used and is documented by the provider in
+    /.well-known/api-catalog. It is only partial because the live surface contradicts the documented
+    contract on two of six endpoints — /product/similar/ places its data at the top level with no
+    results member at all, and /product/products/ makes results an object rather than the array a
+    consumer would infer. See conventions/melorra-conventions.yml.
+- id: idempotency
+  conforms: false
+  level: na
+  evidence: 'Read-only API (Allow: GET, HEAD, OPTIONS). No write surface, so idempotency does not apply.'
+- id: scim
+  conforms: false
+  evidence: No identity or provisioning surface.
+- id: fhir
+  conforms: false
+  evidence: Not a healthcare provider.
+- id: psd2
+  conforms: false
+  evidence: Not a payments or account-servicing provider.
+- id: fapi
+  conforms: false
+  evidence: Not a financial-grade API.
+- id: http_caching
+  conforms: false
+  evidence: >-
+    No ETag, Last-Modified or Cache-Control returned on catalog responses, so a conditional request
+    cannot be made against a 21,742-product catalog.
+- id: cors
+  conforms: false
+  level: partial
+  evidence: >-
+    Vary includes Origin, indicating origin-aware handling, but no Access-Control-Allow-Origin header
+    was returned to a request without an Origin. Browser-side reachability is therefore unconfirmed.
+domain_standard:
+  market: Retail / jewellery e-commerce product catalog
+  declared: false
+  evidence: >-
+    Probed the contract for a declared retail or product-catalog domain standard and found none. The
+    catalog exposes no GS1 GTIN, no schema.org Product/Offer vocabulary in the API payload, no
+    GoodRelations terms, no Google Merchant / RSS 2.0 product feed media type, and no EDI/EDIFACT or
+    ISO message shape. Product identity is entirely proprietary — an integer `sku`, an
+    `ext_product_id` and a Melorra-internal `code`/`design_code` variant scheme
+    (e.g. C22CC117F-XX-12-109Y00 encoding design, size and karat). Metal purity is expressed as
+    free-text karat labels ("9 Karat", "22KT") and stone quality as free text ("0.0 carat SI IJ")
+    rather than any standard grading vocabulary.
+  reward_only_note: >-
+    Recorded as absent, not as a failure. Retail product catalogs do have candidate standards
+    (schema.org/Product, GS1) and Melorra adopts none of them, so a consumer needs a bespoke
+    connector to map Melorra's catalog into any commerce system — but no penalty is implied.
+agent_facing_declarations:
+- id: llms.txt
+  conforms: true
+  evidence: >-
+    https://www.melorra.com/llms.txt returns 200 with a real, hand-written index naming the site,
+    the API catalog, sitemaps, product categories and policies. Saved at llms/melorra-llms.txt.
+- id: content-signal
+  conforms: true
+  evidence: >-
+    Both robots.txt and llms.txt declare `Content-Signal: ai-train=no, search=yes, ai-input=yes` —
+    an explicit, consistent machine-readable statement that Melorra permits agent inference and
+    search indexing but refuses training use. Declared identically on both surfaces, which is the
+    correct way to do it.
+- id: api-catalog
+  conforms: true
+  level: partial
+  evidence: >-
+    Melorra serves a document at /.well-known/api-catalog (HTTP 200, 1422 bytes), which is the RFC
+    9727 registered path — but the body is a bespoke JSON object (name/version/base_url/pagination/
+    endpoints), not an RFC 9727 linkset (application/linkset+json). The intent is right and the
+    content is genuinely useful; the format is not the standard one. Served as
+    application/octet-stream rather than a JSON media type.
+certifications:
+  published: []
+  detail: >-
+    No API-relevant security or compliance certification is published (no SOC 2, ISO 27001, PCI DSS
+    or equivalent trust surface was found — see probe-security-programs, which returned none).
+    Melorra does publish product-level certifications — BIS hallmarking for gold and SGL/IGI
+    certification for diamonds and gemstones — but those attest to the jewellery, not to the API or
+    the company's information security, and are not wired as a Compliance pointer.

@@ -1,0 +1,89 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Melorra Catalog API
+  version: 1.0.0
+x-apievangelist-generated: '2026-08-25'
+x-apievangelist-method: generated
+x-apievangelist-source: >-
+  Derived from live probes of https://services-catalog.melorra.com/api on 2026-08-25 and from
+  Melorra's published /.well-known/api-catalog and /llms.txt.
+x-apievangelist-note: >-
+  Captures API Evangelist's observations as an Overlay so the base description in
+  openapi/melorra-catalog-api-openapi.yml is never mutated. These actions annotate the contract with
+  what was verified on the wire — the read-only posture, the anonymous access model, the pagination
+  divergences and the two endpoints that return 500.
+extends: ../openapi/melorra-catalog-api-openapi.yml
+actions:
+- target: $.info
+  description: Record the provenance and the verified access posture at the document root.
+  update:
+    x-access-model: anonymous-public
+    x-write-surface: false
+    x-allow-header: GET, HEAD, OPTIONS
+    x-verified-on: '2026-08-25'
+    x-contract-published-by-provider: false
+    x-provider-machine-readable-docs:
+    - https://www.melorra.com/.well-known/api-catalog
+    - https://www.melorra.com/llms.txt
+- target: $.paths.*.get
+  description: Mark every operation read-only and safe, verified from the server Allow header.
+  update:
+    x-read-only: true
+    x-safe: true
+    x-idempotent: true
+    x-requires-auth: false
+- target: $.paths['/product/products/'].get
+  description: >-
+    Flag the pagination divergence and the broken documented filter on the primary listing endpoint.
+  update:
+    x-pagination-shape: results-is-object
+    x-pagination-divergence: >-
+      The provider's published api-catalog states the data is always inside `results`; here `results`
+      is an object wrapping a `products` array rather than the array a consumer would infer.
+    x-broken-parameters:
+    - name: special_price__range
+      documented_example: '10000,20000'
+      observed_status: 500
+    - name: trend
+      documented_example: Classic
+      observed_status: 200
+      observed_count: 0
+    x-facets-in-response: true
+    x-observed-count: 21742
+- target: $.paths['/product/similar/'].get
+  description: Flag the strongest pagination divergence — no results member at all.
+  update:
+    x-pagination-shape: flat-top-level
+    x-pagination-divergence: >-
+      Contradicts the provider's stated contract outright — there is no `results` member; `products`
+      and the media base paths sit at the top level beside count/next/previous.
+    x-aliases-in-api-root:
+    - products
+    - recommended
+    - similar
+- target: $.paths['/product/product/'].get
+  description: Record the third pagination shape and the missing per-SKU detail route.
+  update:
+    x-pagination-shape: results-is-array
+    x-per-item-route-broken:
+      path: /product/product/{sku}/
+      observed_status: 500
+      note: >-
+        There is no working per-SKU route on this projection, so variant pricing for one product can
+        only be reached by paging the whole collection.
+    x-observed-count: 10000
+- target: $.components.schemas.Error
+  description: State plainly that this is not RFC 9457 and that 5xx is not JSON.
+  update:
+    x-rfc9457: false
+    x-error-code-registry: false
+    x-content-type-inconsistency: >-
+      404 on a routed path returns application/json with this envelope; 500 returns an HTML Django
+      error page, so a consumer cannot assume a JSON body on every response.
+- target: $.components.schemas.ProductImages
+  description: Warn that image paths are relative and unusable on their own.
+  update:
+    x-relative-paths: true
+    x-join-required: >-
+      Must be joined to base_image_path / base_video_path, which are returned in a sibling member of
+      the response rather than on the product record itself.

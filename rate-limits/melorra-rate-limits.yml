@@ -1,0 +1,36 @@
+generated: '2026-08-25'
+method: probed
+source: >-
+  live response headers from https://services-catalog.melorra.com/api/product/products/ and a search
+  of Melorra's published api-catalog and llms.txt, 2026-08-25.
+limit_count: 0
+summary: >-
+  Melorra publishes no rate limits for the catalog API and returns no rate-limit headers at runtime.
+  An honest zero — the limits were looked for on both the documentation surface and the wire, and
+  neither carries any.
+documented_limits: []
+response_headers:
+  observed: []
+  probed_for:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - RateLimit
+  - RateLimit-Policy
+  - Retry-After
+  detail: >-
+    Full response headers observed on a 200 were: server (nginx/1.18.0 Ubuntu), date, content-type,
+    content-length, vary (Accept, Cookie, Origin, Accept-Encoding), allow (GET, HEAD, OPTIONS),
+    x-frame-options, x-content-type-options, referrer-policy, cross-origin-opener-policy, via, and
+    alt-svc. No rate-limit or retry signal of any kind.
+exhaustion_status: unknown
+agent_impact: >-
+  Because access is anonymous there is no key to attribute a quota to, and because no headers are
+  returned there is no runtime signal an agent can back off on. An agent cannot distinguish
+  "approaching a limit" from "healthy" and will discover any limit only as an unexplained failure.
+  Any limiting that exists is upstream (nginx or the Google frontend named in the via header) and
+  invisible to the consumer.
+recommendation: >-
+  Consumers should self-throttle conservatively and treat 5xx as potentially load-shed. Note the
+  catalog is large (21,742 gold/diamond/gemstone products at 20 per page, plus 165 silver), so a
+  full crawl is roughly 1,100 requests against an endpoint with no published budget.

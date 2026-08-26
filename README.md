@@ -64,5 +64,8 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Melorra is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Melorra is an Indian direct-to-consumer fine jewellery brand, founded in 2015 and operated by August Jewellery Pvt Ltd, selling lightweight, fashion-led gold, diamond, gemstone and silver jewellery designed for everyday and workwear rather than for weddings. It sells online at melorra.com and through an app and a network of experience centres. Melorra runs a public, unauthenticated catalog API at services-catalog.melorra.com and publishes both an `llms.txt` and a machine-readable `/.well-known/api-catalog` document describing it. In January 2026 Senco Gold agreed to acquire a controlling 68% stake in August Jewellery.
+
+- https://www.melorra.com/
+- https://www.melorra.com/.well-known/api-catalog
+- https://www.melorra.com/llms.txt

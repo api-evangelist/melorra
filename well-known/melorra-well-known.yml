@@ -1,0 +1,47 @@
+generated: '2026-08-25'
+method: searched
+source: live probes of /.well-known/* on every apis.yml and OpenAPI servers[] host, 2026-08-25
+note: >-
+  Melorra serves a real, non-empty /.well-known/api-catalog on its website host — an unusual and
+  genuine agent-discovery surface for a jewellery retailer. It is NOT an RFC 9727 linkset; it is a
+  bespoke JSON document naming a base_url, a pagination contract and two endpoints. It is saved
+  verbatim as melorra-api-catalog.json. Every other well-known path on both hosts returned 404 with
+  the ordinary site 404 page (42893 bytes on the website, 179 bytes on the API host), so this host
+  is not a 200-for-everything catch-all and the api-catalog hit is trustworthy.
+hit_count: 1
+hosts:
+- host: https://www.melorra.com
+  documents:
+  - path: /.well-known/api-catalog
+    status: 200
+    file: melorra-api-catalog.json
+    content_type: application/octet-stream
+    bytes: 1422
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://services-catalog.melorra.com
+  documents:
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404

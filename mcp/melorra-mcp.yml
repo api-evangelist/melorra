@@ -1,0 +1,79 @@
+generated: '2026-08-25'
+method: derived
+source: >-
+  Derived from openapi/melorra-catalog-api-openapi.yml. Searched for a Melorra-published MCP server
+  on 2026-08-25 and found none.
+status: candidate
+summary: >-
+  Melorra ships no MCP server. The tools below are a CANDIDATE set derived from the operations of
+  the public catalog API — they describe what an MCP server for Melorra could expose, not anything
+  Melorra operates. No endpoint is asserted because none exists.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: derived
+  note: >-
+    mode is none because no hosted remote server and no stdio package were found. No MCP endpoint
+    URL is guessed here: the underlying API is anonymous, so a guessed path that happened to answer
+    would be indistinguishable from a real agent surface, which is precisely the artifact that must
+    not be created. The `auth: none` reflects the underlying API's anonymous access, which is what
+    any future server would inherit.
+search_evidence:
+- probe: npm registry search for a melorra MCP package
+  result: none — the only @melorra packages are design-system libraries (see packages/)
+- probe: https://www.melorra.com/llms.txt
+  status: 200
+  result: names a website, an api-catalog, sitemaps and a markdown-negotiation claim; no MCP server
+- probe: https://www.melorra.com/.well-known/api-catalog
+  status: 200
+  result: names REST endpoints only; no MCP surface
+- probe: https://www.melorra.com/.well-known/ai-plugin.json
+  status: 404
+- probe: https://github.com/MelorraTech
+  status: 200
+  result: organization exists but has 0 public repositories
+candidate_tools:
+- name: search_jewellery
+  description: >-
+    Search Melorra's jewellery catalog by wear type, material, collection or trend, with faceted
+    filter values and counts returned alongside the results.
+  backing_operation: listProducts
+  http: GET /product/products/
+  input_schema_source: openapi/melorra-catalog-api-openapi.yml#/paths/~1product~1products~1/get
+  read_only: true
+- name: get_product
+  description: Retrieve a single jewellery product by its SKU.
+  backing_operation: getProductBySku
+  http: GET /product/products/{sku}/
+  read_only: true
+- name: find_similar_jewellery
+  description: Find products similar to a given SKU, or browse the recommendation pool.
+  backing_operation: listSimilarProducts
+  http: GET /product/similar/
+  read_only: true
+- name: list_product_details
+  description: >-
+    Page the rich merchandising projection carrying karat and size variant matrices, weights,
+    per-variant stock counts and shipping lead times.
+  backing_operation: listProductDetails
+  http: GET /product/product/
+  read_only: true
+- name: search_silver_jewellery
+  description: Search the silver product line, which is served by its own endpoint rather than as a filter.
+  backing_operation: listSilverProducts
+  http: GET /product/products_silver/
+  read_only: true
+- name: list_endpoints
+  description: Read the catalog backend's own root index of available endpoints.
+  backing_operation: getApiRoot
+  http: GET /product/
+  read_only: true
+notes:
+- Every candidate tool is read-only. The underlying API accepts only GET, HEAD and OPTIONS.
+- >-
+  A real server would need to handle the three inconsistent pagination shapes documented in
+  conventions/melorra-conventions.yml, and should avoid the special_price__range filter, which 500s
+  on the provider's own documented example value.

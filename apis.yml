@@ -1,23 +1,107 @@
 aid: melorra
 name: Melorra
-description: 'Melorra is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Melorra is an Indian direct-to-consumer fine jewellery brand, founded in 2015 and operated by
+  August Jewellery Pvt Ltd, selling lightweight, fashion-led gold, diamond, gemstone and silver
+  jewellery designed for everyday and workwear rather than for weddings. It sells online at
+  melorra.com and through an app and a network of experience centres, delivering BIS-hallmarked
+  gold and IGI/SGL-certified stones across hundreds of Indian districts. Melorra runs a public,
+  unauthenticated catalog API at services-catalog.melorra.com and — unusually for a retailer —
+  publishes both an llms.txt and a machine-readable /.well-known/api-catalog document describing
+  it, giving AI agents a documented path into a 21,000-product jewellery catalog. In January 2026
+  Senco Gold agreed to acquire a controlling 68% stake in August Jewellery.
+image: https://assets.melorra.com/logo/favicon.ico
 url: https://raw.githubusercontent.com/api-evangelist/melorra/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-25'
 modified: '2026-08-25'
 tags:
 - Company
-apis: []
+- Jewellery
+- Retail
+- E-Commerce
+- Product Catalog
+- Direct to Consumer
+- Fashion
+- India
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: melorra-catalog-api
+  name: Melorra Catalog API
+  description: >-
+    Public, unauthenticated read API for Melorra's jewellery catalog, described by Melorra's own
+    published /.well-known/api-catalog document as the "Public API for Melorra's product catalog
+    and jewellery services". Exposes product listing with faceted filters, per-SKU product detail,
+    a richer merchandising projection carrying karat/size variant matrices and shipping lead times,
+    a parallel silver product line, and a similar/recommended products endpoint. Read-only — the
+    service advertises Allow: GET, HEAD, OPTIONS — and paginated with Django REST Framework
+    PageNumberPagination. Prices in INR with conversion rates echoed on every response.
+  humanURL: https://www.melorra.com/.well-known/api-catalog
+  baseURL: https://services-catalog.melorra.com/api
+  tags:
+  - Product Catalog
+  - Jewellery
+  - E-Commerce
+  - Retail
+  properties:
+  - type: OpenAPI
+    url: openapi/melorra-catalog-api-openapi.yml
+  - type: Overlay
+    url: overlays/melorra-catalog-api-overlay.yaml
+  - type: Authentication
+    url: authentication/melorra-authentication.yml
+  - type: ErrorCatalog
+    url: errors/melorra-problem-types.yml
+  - type: Conventions
+    url: conventions/melorra-conventions.yml
+  - type: DataModel
+    url: data-model/melorra-data-model.yml
+  - type: RateLimits
+    url: rate-limits/melorra-rate-limits.yml
+  - type: Conformance
+    url: conformance/melorra-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/melorra-lifecycle.yml
+  - type: ToolCrosswalk
+    url: mcp/melorra-tool-crosswalk.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.melorra.com/
+- type: APICatalog
+  url: https://www.melorra.com/.well-known/api-catalog
+- type: WellKnown
+  url: well-known/melorra-well-known.yml
+- type: LLMsTxt
+  url: llms/melorra-llms.txt
+- type: Documentation
+  url: https://www.melorra.com/.well-known/api-catalog
+- type: Support
+  url: https://www.melorra.com/contactus/
+- type: SignUp
+  url: https://www.melorra.com/sign-in/
+- type: PrivacyPolicy
+  url: https://www.melorra.com/privacy-policy/
+- type: Blog
+  url: https://www.melorra.com/press/
+- type: GitHubOrganization
+  url: https://github.com/MelorraTech
+- type: Packages
+  url: packages/melorra-packages.yml
+- type: DomainSecurity
+  url: security/melorra-domain-security.yml
+- type: Plans
+  url: plans/melorra-plans-pricing.yml
+
+x-enrichment:
+  date: '2026-08-25'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v1

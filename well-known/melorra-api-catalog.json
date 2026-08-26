@@ -1,0 +1,34 @@
+{
+  "name": "Melorra Catalog API",
+  "version": "1.0.0",
+  "description": "Public API for Melorra's product catalog and jewellery services. All endpoints are served from the catalog backend.",
+  "base_url": "https://services-catalog.melorra.com/api",
+  "pagination": {
+    "type": "PageNumberPagination",
+    "description": "All list responses are paginated. The response object contains 'count', 'next', 'previous', and 'results'. The actual data is always inside the 'results' field."
+  },
+  "endpoints": [
+    {
+      "url": "https://services-catalog.melorra.com/api/product/products/",
+      "method": "GET",
+      "description": "List all jewellery products. Supports multiple filters.",
+      "parameters": {
+        "trend": "Filter by fashion trend, e.g., 'Classic'",
+        "set_name": "Filter by collection set name, e.g., 'Sea Shell'",
+        "wear_type": "Filter by jewellery type, e.g., 'Bangles'",
+        "type": "Filter by material type, e.g., 'Gold', 'Gemstone'",
+        "special_price__range": "Filter by price range, e.g., '10000,20000'"
+      }
+    },
+    {
+      "url": "https://services-catalog.melorra.com/api/product/products/{sku}/",
+      "method": "GET",
+      "description": "Get detailed information about a product using its SKU.",
+      "parameters": {
+        "sku": "Product SKU, e.g., 232428"
+      }
+    }
+   
+  ],
+  "catalog_url": "https://www.melorra.com/.well-known/api-catalog"
+}
