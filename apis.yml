@@ -32,28 +32,16 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 apis:
-- aid: melorra-catalog-api
-  name: Melorra Catalog API
-  description: >-
-    Public, unauthenticated read API for Melorra's jewellery catalog, described by Melorra's own
-    published /.well-known/api-catalog document as the "Public API for Melorra's product catalog
-    and jewellery services". Exposes product listing with faceted filters, per-SKU product detail,
-    a richer merchandising projection carrying karat/size variant matrices and shipping lead times,
-    a parallel silver product line, and a similar/recommended products endpoint. Read-only — the
-    service advertises Allow: GET, HEAD, OPTIONS — and paginated with Django REST Framework
-    PageNumberPagination. Prices in INR with conversion rates echoed on every response.
+- aid: melorra:melorra-discovery-api
+  name: Melorra Discovery API
+  description: The API root index the catalog backend serves
   humanURL: https://www.melorra.com/.well-known/api-catalog
   baseURL: https://services-catalog.melorra.com/api
   tags:
-  - Product Catalog
-  - Jewellery
-  - E-Commerce
-  - Retail
+  - Discovery
   properties:
   - type: OpenAPI
-    url: openapi/melorra-catalog-api-openapi.yml
-  - type: Overlay
-    url: overlays/melorra-catalog-api-overlay.yaml
+    url: openapi/melorra-discovery-api-openapi.yml
   - type: Authentication
     url: authentication/melorra-authentication.yml
   - type: ErrorCatalog
@@ -70,9 +58,89 @@ apis:
     url: lifecycle/melorra-lifecycle.yml
   - type: ToolCrosswalk
     url: mcp/melorra-tool-crosswalk.yml
-  - type: AgentSkill
-    url: skills/_index.yml
+- aid: melorra:melorra-products-api
+  name: Melorra Products API
+  description: Gold, diamond and gemstone product listing and detail
+  humanURL: https://www.melorra.com/.well-known/api-catalog
+  baseURL: https://services-catalog.melorra.com/api
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/melorra-products-api-openapi.yml
+  - type: Authentication
+    url: authentication/melorra-authentication.yml
+  - type: ErrorCatalog
+    url: errors/melorra-problem-types.yml
+  - type: Conventions
+    url: conventions/melorra-conventions.yml
+  - type: DataModel
+    url: data-model/melorra-data-model.yml
+  - type: RateLimits
+    url: rate-limits/melorra-rate-limits.yml
+  - type: Conformance
+    url: conformance/melorra-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/melorra-lifecycle.yml
+  - type: ToolCrosswalk
+    url: mcp/melorra-tool-crosswalk.yml
+- aid: melorra:melorra-recommendations-api
+  name: Melorra Recommendations API
+  description: Similar and recommended products
+  humanURL: https://www.melorra.com/.well-known/api-catalog
+  baseURL: https://services-catalog.melorra.com/api
+  tags:
+  - Recommendations
+  properties:
+  - type: OpenAPI
+    url: openapi/melorra-recommendations-api-openapi.yml
+  - type: Authentication
+    url: authentication/melorra-authentication.yml
+  - type: ErrorCatalog
+    url: errors/melorra-problem-types.yml
+  - type: Conventions
+    url: conventions/melorra-conventions.yml
+  - type: DataModel
+    url: data-model/melorra-data-model.yml
+  - type: RateLimits
+    url: rate-limits/melorra-rate-limits.yml
+  - type: Conformance
+    url: conformance/melorra-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/melorra-lifecycle.yml
+  - type: ToolCrosswalk
+    url: mcp/melorra-tool-crosswalk.yml
+- aid: melorra:melorra-silver-api
+  name: Melorra Silver API
+  description: The silver product line, served by parallel endpoints
+  humanURL: https://www.melorra.com/.well-known/api-catalog
+  baseURL: https://services-catalog.melorra.com/api
+  tags:
+  - Silver
+  properties:
+  - type: OpenAPI
+    url: openapi/melorra-silver-api-openapi.yml
+  - type: Authentication
+    url: authentication/melorra-authentication.yml
+  - type: ErrorCatalog
+    url: errors/melorra-problem-types.yml
+  - type: Conventions
+    url: conventions/melorra-conventions.yml
+  - type: DataModel
+    url: data-model/melorra-data-model.yml
+  - type: RateLimits
+    url: rate-limits/melorra-rate-limits.yml
+  - type: Conformance
+    url: conformance/melorra-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/melorra-lifecycle.yml
+  - type: ToolCrosswalk
+    url: mcp/melorra-tool-crosswalk.yml
 common:
+- type: Overlay
+  url: overlays/melorra-catalog-api-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Website
   url: https://www.melorra.com/
 - type: APICatalog
