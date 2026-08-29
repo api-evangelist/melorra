@@ -10,6 +10,18 @@ description: >-
   publishes both an llms.txt and a machine-readable /.well-known/api-catalog document describing
   it, giving AI agents a documented path into a 21,000-product jewellery catalog. In January 2026
   Senco Gold agreed to acquire a controlling 68% stake in August Jewellery.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://assets.melorra.com/logo/favicon.ico
 url: https://raw.githubusercontent.com/api-evangelist/melorra/refs/heads/main/apis.yml
 x-type: company
