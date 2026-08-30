@@ -76,6 +76,8 @@ apis:
   humanURL: https://www.melorra.com/.well-known/api-catalog
   baseURL: https://services-catalog.melorra.com/api
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
