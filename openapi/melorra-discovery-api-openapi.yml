@@ -1,0 +1,77 @@
+openapi: 3.2.0
+info:
+  title: Melorra Catalog Discovery API
+  version: 1.0.0
+  description: 'Public, unauthenticated read API for Melorra''s gold, silver, diamond and gemstone jewellery catalog. Melorra describes it in its own published API catalog document as the "Public API for Melorra''s product catalog and jewellery services. All endpoints are served from the catalog backend." The surface is read-only (the server advertises `Allow: GET, HEAD, OPTIONS`) and exposes product listings, per-SKU product detail, a richer merchandising detail projection, a silver-line variant of both, and a similar/recommended-products endpoint. All list responses use Django REST Framework PageNumberPagination. Prices are quoted in INR with a set of conversion rates echoed on every response.'
+  contact:
+    name: Melorra Customer Care
+    url: https://www.melorra.com/contactus/
+  termsOfService: https://www.melorra.com/privacy-policy/
+  x-provider: Melorra (August Jewellery Pvt Ltd)
+servers:
+- url: https://services-catalog.melorra.com/api
+  description: Production catalog backend (named as base_url in Melorra's published api-catalog)
+tags:
+- name: Discovery
+  description: The API root index the catalog backend serves
+paths:
+  /product/:
+    get:
+      tags:
+      - Discovery
+      operationId: getApiRoot
+      summary: Get the API root index
+      description: Returns a Django REST Framework root index mapping endpoint names to absolute URLs, plus the active currency and conversion rates. Observed to advertise product, product_silver, products, products_silver, recommended and similar. Note the advertised URLs use the http scheme even though the service is served over https.
+      responses:
+        '200':
+          description: Endpoint index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiRoot'
+components:
+  schemas:
+    ApiRoot:
+      type: object
+      properties:
+        product:
+          type: string
+          format: uri
+        product_silver:
+          type: string
+          format: uri
+        products:
+          type: string
+          format: uri
+        products_silver:
+          type: string
+          format: uri
+        recommended:
+          type: string
+          format: uri
+        similar:
+          type: string
+          format: uri
+        currency:
+          $ref: '#/components/schemas/Currency'
+        conversion_rates:
+          $ref: '#/components/schemas/ConversionRates'
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
+x-apievangelist-generated: '2026-08-25'
+x-apievangelist-method: generated
+x-apievangelist-source: https://www.melorra.com/.well-known/api-catalog (Melorra's own published API catalog document), https://services-catalog.melorra.com/api/product/ (the live Django REST Framework API root index), and live unauthenticated GET responses probed 2026-08-25.
+x-apievangelist-note: Melorra publishes a machine-readable API catalog at /.well-known/api-catalog naming a public product API, and the API root at /api/product/ returns a DRF index of endpoints — but Melorra publishes NO OpenAPI of its own. This description is generated faithfully from those two provider-published documents plus live responses observed on 2026-08-25. Every path, method, parameter and field below was either named by Melorra's own catalog/root document or observed in a real response. Schemas are summaries of observed payloads, not an authoritative provider contract. Do not treat this as a Melorra-published artifact.

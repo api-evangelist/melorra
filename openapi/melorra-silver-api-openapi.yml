@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: Melorra Catalog Silver API
+  version: 1.0.0
+  description: 'Public, unauthenticated read API for Melorra''s gold, silver, diamond and gemstone jewellery catalog. Melorra describes it in its own published API catalog document as the "Public API for Melorra''s product catalog and jewellery services. All endpoints are served from the catalog backend." The surface is read-only (the server advertises `Allow: GET, HEAD, OPTIONS`) and exposes product listings, per-SKU product detail, a richer merchandising detail projection, a silver-line variant of both, and a similar/recommended-products endpoint. All list responses use Django REST Framework PageNumberPagination. Prices are quoted in INR with a set of conversion rates echoed on every response.'
+  contact:
+    name: Melorra Customer Care
+    url: https://www.melorra.com/contactus/
+  termsOfService: https://www.melorra.com/privacy-policy/
+  x-provider: Melorra (August Jewellery Pvt Ltd)
+servers:
+- url: https://services-catalog.melorra.com/api
+  description: Production catalog backend (named as base_url in Melorra's published api-catalog)
+tags:
+- name: Silver
+  description: The silver product line, served by parallel endpoints
+paths:
+  /product/products_silver/:
+    get:
+      tags:
+      - Silver
+      operationId: listSilverProducts
+      summary: List silver products
+      description: The silver-line equivalent of listProducts, advertised in the API root index. Observed count on 2026-08-25 was 165 products.
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A page of silver products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListPage'
+  /product/product_silver/:
+    get:
+      tags:
+      - Silver
+      operationId: listSilverProductDetails
+      summary: List full silver product detail records
+      description: The silver-line equivalent of listProductDetails. Observed count on 2026-08-25 was 165.
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A page of full silver product detail records
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailPage'
+components:
+  schemas:
+    ProductListPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: object
+            description: An OBJECT, not an array. Melorra's published api-catalog states the data is "always inside the 'results' field", which holds here, but does not say results is itself an object wrapping a `products` array.
+            properties:
+              base_image_path:
+                type: string
+                format: uri
+              base_video_path:
+                type: string
+                format: uri
+              title:
+                type: string
+              breadcrumb:
+                $ref: '#/components/schemas/Breadcrumb'
+              products:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductSummary'
+          item_count:
+            type: integer
+          filters:
+            type: object
+            description: Faceted filters observed on 2026-08-25 — karat, special_price, gender, weight, wear_type, base_colour, type, nav_menu, try_on, occasion, motif.
+            additionalProperties:
+              $ref: '#/components/schemas/FilterFacet'
+          sorting:
+            type: array
+            items:
+              $ref: '#/components/schemas/SortOption'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
+    Pagination:
+      type: object
+      description: Django REST Framework PageNumberPagination envelope.
+      properties:
+        count:
+          type: integer
+          description: Total matching records.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+    SortOption:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        isset:
+          type: integer
+    Pricing:
+      type: object
+      description: Karat and size variant matrix with weights and per-variant stock counts.
+      properties:
+        status:
+          type: boolean
+        mumc:
+          type: string
+        type:
+          type: string
+        dimension:
+          type: string
+        diamond_caratage:
+          type: string
+        product_code:
+          type: string
+        product_title:
+          type: string
+        wear_type:
+          type: string
+        karat:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/KaratOption'
+        size:
+          type: array
+          items:
+            $ref: '#/components/schemas/SizeOption'
+    Breadcrumb:
+      type: array
+      items:
+        type: object
+        properties:
+          value:
+            type: string
+          link:
+            type: string
+    SizeOption:
+      type: object
+      properties:
+        title:
+          type: string
+        size:
+          type: number
+        display_size:
+          type: number
+        diameter:
+          type: string
+        circumference:
+          type: string
+        product_size:
+          type: string
+        weight_change_percent:
+          type: number
+        product_code:
+          type: string
+        quickship_k09_count:
+          type: integer
+        quickship_k14_count:
+          type: integer
+        quickship_k18_count:
+          type: integer
+        quickship_k22_count:
+          type: integer
+        express_k09_count:
+          type: integer
+        express_k14_count:
+          type: integer
+        express_k18_count:
+          type: integer
+        express_k22_count:
+          type: integer
+    KaratOption:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+        weight:
+          type:
+          - string
+          - 'null'
+        is_available:
+          type: boolean
+        product_code:
+          type: string
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
+    ShippingData:
+      type: object
+      description: Published lead times for manufacture, hallmarking and transit.
+      properties:
+        delivery_date_range:
+          type: string
+        delivery_date_range_express:
+          type: string
+        delivery_date_range_qs:
+          type: string
+        disclaimer_message:
+          type: string
+        hallmarking_days:
+          type:
+          - integer
+          - string
+        lead_time:
+          type:
+          - integer
+          - string
+        manufacturing_days:
+          type:
+          - integer
+          - string
+        processing_days:
+          type:
+          - integer
+          - string
+        transit_days:
+          type:
+          - integer
+          - string
+        transit_days_range:
+          type: string
+    ProductDetailPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            description: An ARRAY here, unlike the object form returned by listProducts.
+            items:
+              $ref: '#/components/schemas/ProductDetail'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
+    ProductDetail:
+      type: object
+      description: The rich merchandising projection returned by listProductDetails.
+      properties:
+        media_base_path:
+          type: object
+          properties:
+            base_image_path:
+              type: string
+              format: uri
+            base_video_path:
+              type: string
+              format: uri
+        breadcrumb:
+          $ref: '#/components/schemas/Breadcrumb'
+        images:
+          $ref: '#/components/schemas/ProductImages'
+        pricing:
+          $ref: '#/components/schemas/Pricing'
+        product_data:
+          $ref: '#/components/schemas/ProductData'
+    ProductSummary:
+      type: object
+      description: The summary product record returned in listings and by SKU lookup.
+      properties:
+        sku:
+          type: integer
+        ext_product_id:
+          type: integer
+        code:
+          type: string
+          description: Full variant code including karat and size.
+        design_code:
+          type: string
+        status:
+          type: boolean
+        trend:
+          type: string
+        nav_menu:
+          type: string
+        type:
+          type: string
+          description: Material type
+          e.g. Gold.: null
+        product_type:
+          type: string
+        wear_type:
+          type: string
+        wear_type_name:
+          type: string
+        category_name:
+          type: string
+        set_code:
+          type: string
+        set_name:
+          type: string
+        product_title:
+          type: string
+        productalt_text:
+          type: string
+        discount_message:
+          type: string
+        price:
+          type: number
+        special_price:
+          type: number
+        quick_ship:
+          type: boolean
+        express:
+          type: boolean
+        try_on:
+          type: boolean
+        new_product:
+          type: boolean
+        melorraProductUrl:
+          type: string
+          description: Site-relative product page path.
+        images:
+          $ref: '#/components/schemas/ProductImages'
+        available_in_cluster:
+          type: array
+          items:
+            type: string
+    FilterFacet:
+      type: object
+      description: A faceted filter with its available values and result counts.
+      properties:
+        count:
+          type: integer
+        label:
+          type: string
+        isset:
+          type: integer
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+              title:
+                type: string
+              isset:
+                type: integer
+              count:
+                type: integer
+    ProductImages:
+      type: object
+      description: Image paths, relative to the media base paths returned alongside them.
+      properties:
+        product_images:
+          type: array
+          items:
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
+    ProductData:
+      type: object
+      properties:
+        seo:
+          type: object
+          properties:
+            meta_title:
+              type: string
+            meta_description:
+              type: string
+        collection:
+          type: object
+          properties:
+            name:
+              type: string
+            season_name:
+              type: string
+            trend_name:
+              type: string
+            collection_link:
+              type: string
+            banners:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+        shipping_data:
+          $ref: '#/components/schemas/ShippingData'
+        product_specifications:
+          type: object
+          description: Observed members include sku, product_id, code, design_code, product_title, product_type, type, trend, trend_code, set_name, set_code, category_name, nav_menu, wear_type_name, karat, occasion, enamel_type, discount_message, melorraProductUrl, new_product, try_on, status, productalt_text.
+          additionalProperties: true
+        additional_product_specifications:
+          type: object
+          properties:
+            preferred_size:
+              type:
+              - string
+              - number
+              - 'null'
+            quick_ship18k:
+              type:
+              - boolean
+              - integer
+              - 'null'
+            quick_ship22k:
+              type:
+              - boolean
+              - integer
+              - 'null'
+            short_description:
+              type: string
+            wear_type:
+              type: string
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: 1-based page number (Django REST Framework PageNumberPagination).
+      schema:
+        type: integer
+        minimum: 1
+x-apievangelist-generated: '2026-08-25'
+x-apievangelist-method: generated
+x-apievangelist-source: https://www.melorra.com/.well-known/api-catalog (Melorra's own published API catalog document), https://services-catalog.melorra.com/api/product/ (the live Django REST Framework API root index), and live unauthenticated GET responses probed 2026-08-25.
+x-apievangelist-note: Melorra publishes a machine-readable API catalog at /.well-known/api-catalog naming a public product API, and the API root at /api/product/ returns a DRF index of endpoints — but Melorra publishes NO OpenAPI of its own. This description is generated faithfully from those two provider-published documents plus live responses observed on 2026-08-25. Every path, method, parameter and field below was either named by Melorra's own catalog/root document or observed in a real response. Schemas are summaries of observed payloads, not an authoritative provider contract. Do not treat this as a Melorra-published artifact.

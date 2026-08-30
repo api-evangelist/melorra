@@ -1,0 +1,187 @@
+openapi: 3.2.0
+info:
+  title: Melorra Catalog Recommendations API
+  version: 1.0.0
+  description: 'Public, unauthenticated read API for Melorra''s gold, silver, diamond and gemstone jewellery catalog. Melorra describes it in its own published API catalog document as the "Public API for Melorra''s product catalog and jewellery services. All endpoints are served from the catalog backend." The surface is read-only (the server advertises `Allow: GET, HEAD, OPTIONS`) and exposes product listings, per-SKU product detail, a richer merchandising detail projection, a silver-line variant of both, and a similar/recommended-products endpoint. All list responses use Django REST Framework PageNumberPagination. Prices are quoted in INR with a set of conversion rates echoed on every response.'
+  contact:
+    name: Melorra Customer Care
+    url: https://www.melorra.com/contactus/
+  termsOfService: https://www.melorra.com/privacy-policy/
+  x-provider: Melorra (August Jewellery Pvt Ltd)
+servers:
+- url: https://services-catalog.melorra.com/api
+  description: Production catalog backend (named as base_url in Melorra's published api-catalog)
+tags:
+- name: Recommendations
+  description: Similar and recommended products
+paths:
+  /product/similar/:
+    get:
+      tags:
+      - Recommendations
+      operationId: listSimilarProducts
+      summary: List similar or recommended products
+      description: Advertised in the API root index under three names — products, recommended and similar — all resolving to this one endpoint. Returns a flat page whose `products` array sits at the top level rather than under `results`. Accepts a `sku` to anchor the similarity; observed count fell from 25971 unanchored to 8231 when anchored to sku 232484 on 2026-08-25.
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - name: sku
+        in: query
+        description: Anchor SKU to find similar products for.
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Page size. Echoed in the `next` link as size=20.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A page of similar products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimilarProductsPage'
+components:
+  schemas:
+    Pagination:
+      type: object
+      description: Django REST Framework PageNumberPagination envelope.
+      properties:
+        count:
+          type: integer
+          description: Total matching records.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+    SimilarProductsPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        description: A flat page — the products array sits at the top level rather than under `results`, diverging from the pagination contract Melorra's published api-catalog states.
+        properties:
+          base_image_path:
+            type: string
+            format: uri
+          base_video_path:
+            type: string
+            format: uri
+          products:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProductSummary'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
+    ProductSummary:
+      type: object
+      description: The summary product record returned in listings and by SKU lookup.
+      properties:
+        sku:
+          type: integer
+        ext_product_id:
+          type: integer
+        code:
+          type: string
+          description: Full variant code including karat and size.
+        design_code:
+          type: string
+        status:
+          type: boolean
+        trend:
+          type: string
+        nav_menu:
+          type: string
+        type:
+          type: string
+          description: Material type
+          e.g. Gold.: null
+        product_type:
+          type: string
+        wear_type:
+          type: string
+        wear_type_name:
+          type: string
+        category_name:
+          type: string
+        set_code:
+          type: string
+        set_name:
+          type: string
+        product_title:
+          type: string
+        productalt_text:
+          type: string
+        discount_message:
+          type: string
+        price:
+          type: number
+        special_price:
+          type: number
+        quick_ship:
+          type: boolean
+        express:
+          type: boolean
+        try_on:
+          type: boolean
+        new_product:
+          type: boolean
+        melorraProductUrl:
+          type: string
+          description: Site-relative product page path.
+        images:
+          $ref: '#/components/schemas/ProductImages'
+        available_in_cluster:
+          type: array
+          items:
+            type: string
+    ProductImages:
+      type: object
+      description: Image paths, relative to the media base paths returned alongside them.
+      properties:
+        product_images:
+          type: array
+          items:
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: 1-based page number (Django REST Framework PageNumberPagination).
+      schema:
+        type: integer
+        minimum: 1
+x-apievangelist-generated: '2026-08-25'
+x-apievangelist-method: generated
+x-apievangelist-source: https://www.melorra.com/.well-known/api-catalog (Melorra's own published API catalog document), https://services-catalog.melorra.com/api/product/ (the live Django REST Framework API root index), and live unauthenticated GET responses probed 2026-08-25.
+x-apievangelist-note: Melorra publishes a machine-readable API catalog at /.well-known/api-catalog naming a public product API, and the API root at /api/product/ returns a DRF index of endpoints — but Melorra publishes NO OpenAPI of its own. This description is generated faithfully from those two provider-published documents plus live responses observed on 2026-08-25. Every path, method, parameter and field below was either named by Melorra's own catalog/root document or observed in a real response. Schemas are summaries of observed payloads, not an authoritative provider contract. Do not treat this as a Melorra-published artifact.
