@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Melorra Catalog Discovery API
   version: 1.0.0
-  description: 'Public, unauthenticated read API for Melorra''s gold, silver, diamond and gemstone jewellery catalog. Melorra describes it in its own published API catalog document as the "Public API for Melorra''s product catalog and jewellery services. All endpoints are served from the catalog backend." The surface is read-only (the server advertises `Allow: GET, HEAD, OPTIONS`) and exposes product listings, per-SKU product detail, a richer merchandising detail projection, a silver-line variant of both, and a similar/recommended-products endpoint. All list responses use Django REST Framework PageNumberPagination. Prices are quoted in INR with a set of conversion rates echoed on every response.'
+  description: Public, unauthenticated read API for Melorra's gold, silver, diamond and gemstone jewellery catalog.
   contact:
     name: Melorra Customer Care
     url: https://www.melorra.com/contactus/
@@ -31,6 +31,11 @@ paths:
                 $ref: '#/components/schemas/ApiRoot'
 components:
   schemas:
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
     ApiRoot:
       type: object
       properties:
@@ -66,11 +71,6 @@ components:
           - INR
         symbol:
           type: string
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
 x-apievangelist-generated: '2026-08-25'
 x-apievangelist-method: generated
 x-apievangelist-source: https://www.melorra.com/.well-known/api-catalog (Melorra's own published API catalog document), https://services-catalog.melorra.com/api/product/ (the live Django REST Framework API root index), and live unauthenticated GET responses probed 2026-08-25.

@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Melorra Catalog Recommendations API
   version: 1.0.0
-  description: 'Public, unauthenticated read API for Melorra''s gold, silver, diamond and gemstone jewellery catalog. Melorra describes it in its own published API catalog document as the "Public API for Melorra''s product catalog and jewellery services. All endpoints are served from the catalog backend." The surface is read-only (the server advertises `Allow: GET, HEAD, OPTIONS`) and exposes product listings, per-SKU product detail, a richer merchandising detail projection, a silver-line variant of both, and a similar/recommended-products endpoint. All list responses use Django REST Framework PageNumberPagination. Prices are quoted in INR with a set of conversion rates echoed on every response.'
+  description: Public, unauthenticated read API for Melorra's gold, silver, diamond and gemstone jewellery catalog.
   contact:
     name: Melorra Customer Care
     url: https://www.melorra.com/contactus/
@@ -43,6 +43,32 @@ paths:
                 $ref: '#/components/schemas/SimilarProductsPage'
 components:
   schemas:
+    ProductImages:
+      type: object
+      description: Image paths, relative to the media base paths returned alongside them.
+      properties:
+        product_images:
+          type: array
+          items:
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
     Pagination:
       type: object
       description: Django REST Framework PageNumberPagination envelope.
@@ -80,21 +106,6 @@ components:
             $ref: '#/components/schemas/Currency'
           conversion_rates:
             $ref: '#/components/schemas/ConversionRates'
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
-    Currency:
-      type: object
-      description: Active currency, echoed on every response.
-      properties:
-        code:
-          type: string
-          examples:
-          - INR
-        symbol:
-          type: string
     ProductSummary:
       type: object
       description: The summary product record returned in listings and by SKU lookup.
@@ -157,22 +168,11 @@ components:
           type: array
           items:
             type: string
-    ProductImages:
+    ConversionRates:
       type: object
-      description: Image paths, relative to the media base paths returned alongside them.
-      properties:
-        product_images:
-          type: array
-          items:
-            type: string
-        enlarged_images:
-          type: array
-          items:
-            type: string
-        category_images:
-          type: array
-          items:
-            type: string
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
   parameters:
     Page:
       name: page

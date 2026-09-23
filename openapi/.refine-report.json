@@ -1,0 +1,26 @@
+{
+  "provider": "melorra",
+  "sources": [
+    "_original/melorra-catalog-api-openapi.yml"
+  ],
+  "outputs": [
+    "melorra-discovery-api-openapi.yml",
+    "melorra-products-api-openapi.yml",
+    "melorra-recommendations-api-openapi.yml",
+    "melorra-silver-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "melorra-catalog-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "melorra-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "melorra-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "melorra-recommendations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "melorra-silver-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

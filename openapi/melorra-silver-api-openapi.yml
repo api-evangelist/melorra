@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Melorra Catalog Silver API
   version: 1.0.0
-  description: 'Public, unauthenticated read API for Melorra''s gold, silver, diamond and gemstone jewellery catalog. Melorra describes it in its own published API catalog document as the "Public API for Melorra''s product catalog and jewellery services. All endpoints are served from the catalog backend." The surface is read-only (the server advertises `Allow: GET, HEAD, OPTIONS`) and exposes product listings, per-SKU product detail, a richer merchandising detail projection, a silver-line variant of both, and a similar/recommended-products endpoint. All list responses use Django REST Framework PageNumberPagination. Prices are quoted in INR with a set of conversion rates echoed on every response.'
+  description: Public, unauthenticated read API for Melorra's gold, silver, diamond and gemstone jewellery catalog.
   contact:
     name: Melorra Customer Care
     url: https://www.melorra.com/contactus/
@@ -49,61 +49,46 @@ paths:
                 $ref: '#/components/schemas/ProductDetailPage'
 components:
   schemas:
-    ProductListPage:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: object
-            description: An OBJECT, not an array. Melorra's published api-catalog states the data is "always inside the 'results' field", which holds here, but does not say results is itself an object wrapping a `products` array.
-            properties:
-              base_image_path:
-                type: string
-                format: uri
-              base_video_path:
-                type: string
-                format: uri
-              title:
-                type: string
-              breadcrumb:
-                $ref: '#/components/schemas/Breadcrumb'
-              products:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProductSummary'
-          item_count:
-            type: integer
-          filters:
-            type: object
-            description: Faceted filters observed on 2026-08-25 — karat, special_price, gender, weight, wear_type, base_colour, type, nav_menu, try_on, occasion, motif.
-            additionalProperties:
-              $ref: '#/components/schemas/FilterFacet'
-          sorting:
-            type: array
-            items:
-              $ref: '#/components/schemas/SortOption'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          conversion_rates:
-            $ref: '#/components/schemas/ConversionRates'
-    Pagination:
+    ProductImages:
       type: object
-      description: Django REST Framework PageNumberPagination envelope.
+      description: Image paths, relative to the media base paths returned alongside them.
       properties:
-        count:
-          type: integer
-          description: Total matching records.
-        next:
+        product_images:
+          type: array
+          items:
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
+    KaratOption:
+      type: object
+      properties:
+        title:
           type:
           - string
           - 'null'
-          format: uri
-        previous:
+        weight:
           type:
           - string
           - 'null'
-          format: uri
+        is_available:
+          type: boolean
+        product_code:
+          type: string
+    Breadcrumb:
+      type: array
+      items:
+        type: object
+        properties:
+          value:
+            type: string
+          link:
+            type: string
     SortOption:
       type: object
       properties:
@@ -113,6 +98,37 @@ components:
           type: string
         isset:
           type: integer
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
+    ProductDetail:
+      type: object
+      description: The rich merchandising projection returned by listProductDetails.
+      properties:
+        media_base_path:
+          type: object
+          properties:
+            base_image_path:
+              type: string
+              format: uri
+            base_video_path:
+              type: string
+              format: uri
+        breadcrumb:
+          $ref: '#/components/schemas/Breadcrumb'
+        images:
+          $ref: '#/components/schemas/ProductImages'
+        pricing:
+          $ref: '#/components/schemas/Pricing'
+        product_data:
+          $ref: '#/components/schemas/ProductData'
     Pricing:
       type: object
       description: Karat and size variant matrix with weights and per-variant stock counts.
@@ -141,15 +157,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SizeOption'
-    Breadcrumb:
-      type: array
-      items:
-        type: object
+    ProductDetailPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
         properties:
-          value:
-            type: string
-          link:
-            type: string
+          results:
+            type: array
+            description: An ARRAY here, unlike the object form returned by listProducts.
+            items:
+              $ref: '#/components/schemas/ProductDetail'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
+    Pagination:
+      type: object
+      description: Django REST Framework PageNumberPagination envelope.
+      properties:
+        count:
+          type: integer
+          description: Total matching records.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
     SizeOption:
       type: object
       properties:
@@ -185,105 +223,29 @@ components:
           type: integer
         express_k22_count:
           type: integer
-    KaratOption:
+    FilterFacet:
       type: object
+      description: A faceted filter with its available values and result counts.
       properties:
-        title:
-          type:
-          - string
-          - 'null'
-        weight:
-          type:
-          - string
-          - 'null'
-        is_available:
-          type: boolean
-        product_code:
+        count:
+          type: integer
+        label:
           type: string
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
-    ShippingData:
-      type: object
-      description: Published lead times for manufacture, hallmarking and transit.
-      properties:
-        delivery_date_range:
-          type: string
-        delivery_date_range_express:
-          type: string
-        delivery_date_range_qs:
-          type: string
-        disclaimer_message:
-          type: string
-        hallmarking_days:
-          type:
-          - integer
-          - string
-        lead_time:
-          type:
-          - integer
-          - string
-        manufacturing_days:
-          type:
-          - integer
-          - string
-        processing_days:
-          type:
-          - integer
-          - string
-        transit_days:
-          type:
-          - integer
-          - string
-        transit_days_range:
-          type: string
-    ProductDetailPage:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            description: An ARRAY here, unlike the object form returned by listProducts.
-            items:
-              $ref: '#/components/schemas/ProductDetail'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          conversion_rates:
-            $ref: '#/components/schemas/ConversionRates'
-    Currency:
-      type: object
-      description: Active currency, echoed on every response.
-      properties:
-        code:
-          type: string
-          examples:
-          - INR
-        symbol:
-          type: string
-    ProductDetail:
-      type: object
-      description: The rich merchandising projection returned by listProductDetails.
-      properties:
-        media_base_path:
-          type: object
-          properties:
-            base_image_path:
-              type: string
-              format: uri
-            base_video_path:
-              type: string
-              format: uri
-        breadcrumb:
-          $ref: '#/components/schemas/Breadcrumb'
-        images:
-          $ref: '#/components/schemas/ProductImages'
-        pricing:
-          $ref: '#/components/schemas/Pricing'
-        product_data:
-          $ref: '#/components/schemas/ProductData'
+        isset:
+          type: integer
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+              title:
+                type: string
+              isset:
+                type: integer
+              count:
+                type: integer
     ProductSummary:
       type: object
       description: The summary product record returned in listings and by SKU lookup.
@@ -346,45 +308,83 @@ components:
           type: array
           items:
             type: string
-    FilterFacet:
-      type: object
-      description: A faceted filter with its available values and result counts.
-      properties:
-        count:
-          type: integer
-        label:
-          type: string
-        isset:
-          type: integer
-        values:
-          type: array
-          items:
+    ProductListPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
             type: object
+            description: An OBJECT, not an array. Melorra's published api-catalog states the data is "always inside the 'results' field", which holds here, but does not say results is itself an object wrapping a `products` array.
             properties:
-              value:
+              base_image_path:
                 type: string
+                format: uri
+              base_video_path:
+                type: string
+                format: uri
               title:
                 type: string
-              isset:
-                type: integer
-              count:
-                type: integer
-    ProductImages:
+              breadcrumb:
+                $ref: '#/components/schemas/Breadcrumb'
+              products:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductSummary'
+          item_count:
+            type: integer
+          filters:
+            type: object
+            description: Faceted filters observed on 2026-08-25 — karat, special_price, gender, weight, wear_type, base_colour, type, nav_menu, try_on, occasion, motif.
+            additionalProperties:
+              $ref: '#/components/schemas/FilterFacet'
+          sorting:
+            type: array
+            items:
+              $ref: '#/components/schemas/SortOption'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
+    ShippingData:
       type: object
-      description: Image paths, relative to the media base paths returned alongside them.
+      description: Published lead times for manufacture, hallmarking and transit.
       properties:
-        product_images:
-          type: array
-          items:
-            type: string
-        enlarged_images:
-          type: array
-          items:
-            type: string
-        category_images:
-          type: array
-          items:
-            type: string
+        delivery_date_range:
+          type: string
+        delivery_date_range_express:
+          type: string
+        delivery_date_range_qs:
+          type: string
+        disclaimer_message:
+          type: string
+        hallmarking_days:
+          type:
+          - integer
+          - string
+        lead_time:
+          type:
+          - integer
+          - string
+        manufacturing_days:
+          type:
+          - integer
+          - string
+        processing_days:
+          type:
+          - integer
+          - string
+        transit_days:
+          type:
+          - integer
+          - string
+        transit_days_range:
+          type: string
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
     ProductData:
       type: object
       properties:
