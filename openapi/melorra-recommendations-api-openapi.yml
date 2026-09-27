@@ -43,22 +43,11 @@ paths:
                 $ref: '#/components/schemas/SimilarProductsPage'
 components:
   schemas:
-    ProductImages:
+    ConversionRates:
       type: object
-      description: Image paths, relative to the media base paths returned alongside them.
-      properties:
-        product_images:
-          type: array
-          items:
-            type: string
-        enlarged_images:
-          type: array
-          items:
-            type: string
-        category_images:
-          type: array
-          items:
-            type: string
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
     Currency:
       type: object
       description: Active currency, echoed on every response.
@@ -86,26 +75,22 @@ components:
           - string
           - 'null'
           format: uri
-    SimilarProductsPage:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        description: A flat page — the products array sits at the top level rather than under `results`, diverging from the pagination contract Melorra's published api-catalog states.
-        properties:
-          base_image_path:
+    ProductImages:
+      type: object
+      description: Image paths, relative to the media base paths returned alongside them.
+      properties:
+        product_images:
+          type: array
+          items:
             type: string
-            format: uri
-          base_video_path:
+        enlarged_images:
+          type: array
+          items:
             type: string
-            format: uri
-          products:
-            type: array
-            items:
-              $ref: '#/components/schemas/ProductSummary'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          conversion_rates:
-            $ref: '#/components/schemas/ConversionRates'
+        category_images:
+          type: array
+          items:
+            type: string
     ProductSummary:
       type: object
       description: The summary product record returned in listings and by SKU lookup.
@@ -168,11 +153,26 @@ components:
           type: array
           items:
             type: string
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
+    SimilarProductsPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        description: A flat page — the products array sits at the top level rather than under `results`, diverging from the pagination contract Melorra's published api-catalog states.
+        properties:
+          base_image_path:
+            type: string
+            format: uri
+          base_video_path:
+            type: string
+            format: uri
+          products:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProductSummary'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
   parameters:
     Page:
       name: page

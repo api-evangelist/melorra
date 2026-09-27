@@ -49,55 +49,53 @@ paths:
                 $ref: '#/components/schemas/ProductDetailPage'
 components:
   schemas:
-    ProductImages:
+    ProductDetailPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        properties:
+          results:
+            type: array
+            description: An ARRAY here, unlike the object form returned by listProducts.
+            items:
+              $ref: '#/components/schemas/ProductDetail'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
+    Pricing:
       type: object
-      description: Image paths, relative to the media base paths returned alongside them.
+      description: Karat and size variant matrix with weights and per-variant stock counts.
       properties:
-        product_images:
-          type: array
-          items:
-            type: string
-        enlarged_images:
-          type: array
-          items:
-            type: string
-        category_images:
-          type: array
-          items:
-            type: string
-    KaratOption:
-      type: object
-      properties:
-        title:
-          type:
-          - string
-          - 'null'
-        weight:
-          type:
-          - string
-          - 'null'
-        is_available:
+        status:
           type: boolean
+        mumc:
+          type: string
+        type:
+          type: string
+        dimension:
+          type: string
+        diamond_caratage:
+          type: string
         product_code:
           type: string
-    Breadcrumb:
-      type: array
-      items:
-        type: object
-        properties:
-          value:
-            type: string
-          link:
-            type: string
-    SortOption:
+        product_title:
+          type: string
+        wear_type:
+          type: string
+        karat:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/KaratOption'
+        size:
+          type: array
+          items:
+            $ref: '#/components/schemas/SizeOption'
+    ConversionRates:
       type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
-        isset:
-          type: integer
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
     Currency:
       type: object
       description: Active currency, echoed on every response.
@@ -129,48 +127,6 @@ components:
           $ref: '#/components/schemas/Pricing'
         product_data:
           $ref: '#/components/schemas/ProductData'
-    Pricing:
-      type: object
-      description: Karat and size variant matrix with weights and per-variant stock counts.
-      properties:
-        status:
-          type: boolean
-        mumc:
-          type: string
-        type:
-          type: string
-        dimension:
-          type: string
-        diamond_caratage:
-          type: string
-        product_code:
-          type: string
-        product_title:
-          type: string
-        wear_type:
-          type: string
-        karat:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/KaratOption'
-        size:
-          type: array
-          items:
-            $ref: '#/components/schemas/SizeOption'
-    ProductDetailPage:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        properties:
-          results:
-            type: array
-            description: An ARRAY here, unlike the object form returned by listProducts.
-            items:
-              $ref: '#/components/schemas/ProductDetail'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          conversion_rates:
-            $ref: '#/components/schemas/ConversionRates'
     Pagination:
       type: object
       description: Django REST Framework PageNumberPagination envelope.
@@ -188,64 +144,22 @@ components:
           - string
           - 'null'
           format: uri
-    SizeOption:
+    ProductImages:
       type: object
+      description: Image paths, relative to the media base paths returned alongside them.
       properties:
-        title:
-          type: string
-        size:
-          type: number
-        display_size:
-          type: number
-        diameter:
-          type: string
-        circumference:
-          type: string
-        product_size:
-          type: string
-        weight_change_percent:
-          type: number
-        product_code:
-          type: string
-        quickship_k09_count:
-          type: integer
-        quickship_k14_count:
-          type: integer
-        quickship_k18_count:
-          type: integer
-        quickship_k22_count:
-          type: integer
-        express_k09_count:
-          type: integer
-        express_k14_count:
-          type: integer
-        express_k18_count:
-          type: integer
-        express_k22_count:
-          type: integer
-    FilterFacet:
-      type: object
-      description: A faceted filter with its available values and result counts.
-      properties:
-        count:
-          type: integer
-        label:
-          type: string
-        isset:
-          type: integer
-        values:
+        product_images:
           type: array
           items:
-            type: object
-            properties:
-              value:
-                type: string
-              title:
-                type: string
-              isset:
-                type: integer
-              count:
-                type: integer
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
     ProductSummary:
       type: object
       description: The summary product record returned in listings and by SKU lookup.
@@ -308,6 +222,58 @@ components:
           type: array
           items:
             type: string
+    ShippingData:
+      type: object
+      description: Published lead times for manufacture, hallmarking and transit.
+      properties:
+        delivery_date_range:
+          type: string
+        delivery_date_range_express:
+          type: string
+        delivery_date_range_qs:
+          type: string
+        disclaimer_message:
+          type: string
+        hallmarking_days:
+          type:
+          - integer
+          - string
+        lead_time:
+          type:
+          - integer
+          - string
+        manufacturing_days:
+          type:
+          - integer
+          - string
+        processing_days:
+          type:
+          - integer
+          - string
+        transit_days:
+          type:
+          - integer
+          - string
+        transit_days_range:
+          type: string
+    SortOption:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        isset:
+          type: integer
+    Breadcrumb:
+      type: array
+      items:
+        type: object
+        properties:
+          value:
+            type: string
+          link:
+            type: string
     ProductListPage:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -346,45 +312,29 @@ components:
             $ref: '#/components/schemas/Currency'
           conversion_rates:
             $ref: '#/components/schemas/ConversionRates'
-    ShippingData:
+    FilterFacet:
       type: object
-      description: Published lead times for manufacture, hallmarking and transit.
+      description: A faceted filter with its available values and result counts.
       properties:
-        delivery_date_range:
+        count:
+          type: integer
+        label:
           type: string
-        delivery_date_range_express:
-          type: string
-        delivery_date_range_qs:
-          type: string
-        disclaimer_message:
-          type: string
-        hallmarking_days:
-          type:
-          - integer
-          - string
-        lead_time:
-          type:
-          - integer
-          - string
-        manufacturing_days:
-          type:
-          - integer
-          - string
-        processing_days:
-          type:
-          - integer
-          - string
-        transit_days:
-          type:
-          - integer
-          - string
-        transit_days_range:
-          type: string
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
+        isset:
+          type: integer
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+              title:
+                type: string
+              isset:
+                type: integer
+              count:
+                type: integer
     ProductData:
       type: object
       properties:
@@ -439,6 +389,56 @@ components:
               type: string
             wear_type:
               type: string
+    KaratOption:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+        weight:
+          type:
+          - string
+          - 'null'
+        is_available:
+          type: boolean
+        product_code:
+          type: string
+    SizeOption:
+      type: object
+      properties:
+        title:
+          type: string
+        size:
+          type: number
+        display_size:
+          type: number
+        diameter:
+          type: string
+        circumference:
+          type: string
+        product_size:
+          type: string
+        weight_change_percent:
+          type: number
+        product_code:
+          type: string
+        quickship_k09_count:
+          type: integer
+        quickship_k14_count:
+          type: integer
+        quickship_k18_count:
+          type: integer
+        quickship_k22_count:
+          type: integer
+        express_k09_count:
+          type: integer
+        express_k14_count:
+          type: integer
+        express_k18_count:
+          type: integer
+        express_k22_count:
+          type: integer
   parameters:
     Page:
       name: page
