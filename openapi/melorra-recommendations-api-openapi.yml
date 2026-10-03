@@ -48,16 +48,6 @@ components:
       description: Conversion rates from INR, echoed on every response.
       additionalProperties:
         type: number
-    Currency:
-      type: object
-      description: Active currency, echoed on every response.
-      properties:
-        code:
-          type: string
-          examples:
-          - INR
-        symbol:
-          type: string
     Pagination:
       type: object
       description: Django REST Framework PageNumberPagination envelope.
@@ -75,6 +65,26 @@ components:
           - string
           - 'null'
           format: uri
+    SimilarProductsPage:
+      allOf:
+      - $ref: '#/components/schemas/Pagination'
+      - type: object
+        description: A flat page — the products array sits at the top level rather than under `results`, diverging from the pagination contract Melorra's published api-catalog states.
+        properties:
+          base_image_path:
+            type: string
+            format: uri
+          base_video_path:
+            type: string
+            format: uri
+          products:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProductSummary'
+          currency:
+            $ref: '#/components/schemas/Currency'
+          conversion_rates:
+            $ref: '#/components/schemas/ConversionRates'
     ProductImages:
       type: object
       description: Image paths, relative to the media base paths returned alongside them.
@@ -153,26 +163,16 @@ components:
           type: array
           items:
             type: string
-    SimilarProductsPage:
-      allOf:
-      - $ref: '#/components/schemas/Pagination'
-      - type: object
-        description: A flat page — the products array sits at the top level rather than under `results`, diverging from the pagination contract Melorra's published api-catalog states.
-        properties:
-          base_image_path:
-            type: string
-            format: uri
-          base_video_path:
-            type: string
-            format: uri
-          products:
-            type: array
-            items:
-              $ref: '#/components/schemas/ProductSummary'
-          currency:
-            $ref: '#/components/schemas/Currency'
-          conversion_rates:
-            $ref: '#/components/schemas/ConversionRates'
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
   parameters:
     Page:
       name: page

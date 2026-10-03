@@ -31,11 +31,6 @@ paths:
                 $ref: '#/components/schemas/ApiRoot'
 components:
   schemas:
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
     Currency:
       type: object
       description: Active currency, echoed on every response.
@@ -46,6 +41,11 @@ components:
           - INR
         symbol:
           type: string
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
     ApiRoot:
       type: object
       properties:
