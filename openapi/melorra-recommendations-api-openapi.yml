@@ -43,49 +43,6 @@ paths:
                 $ref: '#/components/schemas/SimilarProductsPage'
 components:
   schemas:
-    ProductImages:
-      type: object
-      description: Image paths, relative to the media base paths returned alongside them.
-      properties:
-        product_images:
-          type: array
-          items:
-            type: string
-        enlarged_images:
-          type: array
-          items:
-            type: string
-        category_images:
-          type: array
-          items:
-            type: string
-    Currency:
-      type: object
-      description: Active currency, echoed on every response.
-      properties:
-        code:
-          type: string
-          examples:
-          - INR
-        symbol:
-          type: string
-    Pagination:
-      type: object
-      description: Django REST Framework PageNumberPagination envelope.
-      properties:
-        count:
-          type: integer
-          description: Total matching records.
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
     SimilarProductsPage:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -106,6 +63,27 @@ components:
             $ref: '#/components/schemas/Currency'
           conversion_rates:
             $ref: '#/components/schemas/ConversionRates'
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
+    ProductImages:
+      type: object
+      description: Image paths, relative to the media base paths returned alongside them.
+      properties:
+        product_images:
+          type: array
+          items:
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
     ProductSummary:
       type: object
       description: The summary product record returned in listings and by SKU lookup.
@@ -168,11 +146,33 @@ components:
           type: array
           items:
             type: string
-    ConversionRates:
+    Pagination:
       type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
+      description: Django REST Framework PageNumberPagination envelope.
+      properties:
+        count:
+          type: integer
+          description: Total matching records.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
   parameters:
     Page:
       name: page
