@@ -165,6 +165,8 @@ apis:
   - type: ToolCrosswalk
     url: mcp/melorra-tool-crosswalk.yml
 common:
+- type: RateLimits
+  url: rate-limits/melorra-rate-limits.yml
 - type: Overlay
   url: overlays/melorra-catalog-api-overlay.yaml
 - type: AgentSkill
