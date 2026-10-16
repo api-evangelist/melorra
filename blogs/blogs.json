@@ -2,6 +2,13 @@
   "repo": "melorra",
   "feeds": [
     {
+      "source": "https://www.melorra.com/press/",
+      "feed_url": "https://www.melorra.com/press/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
       "source": "https://www.melorra.com/privacy-policy/",
       "feed_url": "https://www.melorra.com/privacy-policy/",
       "title": "",
@@ -10,5 +17,5 @@
     }
   ],
   "post_count": 0,
-  "fetched": "2026-09-19T20:17:39Z"
+  "fetched": "2026-10-10T13:15:00Z"
 }

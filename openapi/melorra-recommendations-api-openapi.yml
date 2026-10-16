@@ -43,6 +43,28 @@ paths:
                 $ref: '#/components/schemas/SimilarProductsPage'
 components:
   schemas:
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
+    Pagination:
+      type: object
+      description: Django REST Framework PageNumberPagination envelope.
+      properties:
+        count:
+          type: integer
+          description: Total matching records.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
     SimilarProductsPage:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -63,11 +85,6 @@ components:
             $ref: '#/components/schemas/Currency'
           conversion_rates:
             $ref: '#/components/schemas/ConversionRates'
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
     ProductImages:
       type: object
       description: Image paths, relative to the media base paths returned alongside them.
@@ -146,23 +163,6 @@ components:
           type: array
           items:
             type: string
-    Pagination:
-      type: object
-      description: Django REST Framework PageNumberPagination envelope.
-      properties:
-        count:
-          type: integer
-          description: Total matching records.
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
     Currency:
       type: object
       description: Active currency, echoed on every response.
