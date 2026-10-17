@@ -43,28 +43,6 @@ paths:
                 $ref: '#/components/schemas/SimilarProductsPage'
 components:
   schemas:
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
-    Pagination:
-      type: object
-      description: Django REST Framework PageNumberPagination envelope.
-      properties:
-        count:
-          type: integer
-          description: Total matching records.
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
     SimilarProductsPage:
       allOf:
       - $ref: '#/components/schemas/Pagination'
@@ -85,22 +63,33 @@ components:
             $ref: '#/components/schemas/Currency'
           conversion_rates:
             $ref: '#/components/schemas/ConversionRates'
-    ProductImages:
+    Pagination:
       type: object
-      description: Image paths, relative to the media base paths returned alongside them.
+      description: Django REST Framework PageNumberPagination envelope.
       properties:
-        product_images:
-          type: array
-          items:
-            type: string
-        enlarged_images:
-          type: array
-          items:
-            type: string
-        category_images:
-          type: array
-          items:
-            type: string
+        count:
+          type: integer
+          description: Total matching records.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
     ProductSummary:
       type: object
       description: The summary product record returned in listings and by SKU lookup.
@@ -163,16 +152,27 @@ components:
           type: array
           items:
             type: string
-    Currency:
+    ProductImages:
       type: object
-      description: Active currency, echoed on every response.
+      description: Image paths, relative to the media base paths returned alongside them.
       properties:
-        code:
-          type: string
-          examples:
-          - INR
-        symbol:
-          type: string
+        product_images:
+          type: array
+          items:
+            type: string
+        enlarged_images:
+          type: array
+          items:
+            type: string
+        category_images:
+          type: array
+          items:
+            type: string
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
   parameters:
     Page:
       name: page

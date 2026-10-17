@@ -31,21 +31,6 @@ paths:
                 $ref: '#/components/schemas/ApiRoot'
 components:
   schemas:
-    Currency:
-      type: object
-      description: Active currency, echoed on every response.
-      properties:
-        code:
-          type: string
-          examples:
-          - INR
-        symbol:
-          type: string
-    ConversionRates:
-      type: object
-      description: Conversion rates from INR, echoed on every response.
-      additionalProperties:
-        type: number
     ApiRoot:
       type: object
       properties:
@@ -71,6 +56,21 @@ components:
           $ref: '#/components/schemas/Currency'
         conversion_rates:
           $ref: '#/components/schemas/ConversionRates'
+    Currency:
+      type: object
+      description: Active currency, echoed on every response.
+      properties:
+        code:
+          type: string
+          examples:
+          - INR
+        symbol:
+          type: string
+    ConversionRates:
+      type: object
+      description: Conversion rates from INR, echoed on every response.
+      additionalProperties:
+        type: number
 x-apievangelist-generated: '2026-08-25'
 x-apievangelist-method: generated
 x-apievangelist-source: https://www.melorra.com/.well-known/api-catalog (Melorra's own published API catalog document), https://services-catalog.melorra.com/api/product/ (the live Django REST Framework API root index), and live unauthenticated GET responses probed 2026-08-25.
