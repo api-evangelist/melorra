@@ -1,0 +1,12 @@
+{
+ "url": "https://www.melorra.com/api-docs/catalog-openapi.json",
+ "final": "https://www.melorra.com/api-docs/catalog-openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=UTF-8",
+ "bytes": 11983,
+ "sha256": "8e02011d43327dcec13506872cb309e3f1b45a6a8376660b15029da77fa335bf",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

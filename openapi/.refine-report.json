@@ -1,26 +1,26 @@
 {
   "provider": "melorra",
   "sources": [
-    "_original/melorra-catalog-api-openapi.yml"
+    "_original/melorra-openapi.json"
   ],
   "outputs": [
-    "melorra-discovery-api-openapi.yml",
-    "melorra-products-api-openapi.yml",
-    "melorra-recommendations-api-openapi.yml",
-    "melorra-silver-api-openapi.yml"
+    "melorra-collections-api-openapi.yml",
+    "melorra-product-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "melorra-catalog-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "melorra-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "melorra-openapi.json: tagged paths GET /product/products/ -> Product",
+    "melorra-openapi.json: tagged paths GET /product/products/{sku}/ -> Product",
+    "melorra-openapi.json: tagged paths GET /collections/collection-details/ -> Collections",
+    "melorra-openapi.json: tagged paths GET /collections/collection-trends/ -> Collections",
+    "melorra-openapi.json: tagged paths GET /collections/collection-products/ -> Collections",
+    "melorra-openapi.json: declared missing tag: Collections",
+    "melorra-openapi.json: declared missing tag: Product",
+    "apis.yml register: written (+2 apis, 2 total)"
   ],
-  "skipped": [
-    "melorra-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "melorra-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "melorra-recommendations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "melorra-silver-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

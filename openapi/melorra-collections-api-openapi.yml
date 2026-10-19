@@ -1,0 +1,186 @@
+openapi: 3.2.0
+info:
+  title: Melorra Catalog Collections API
+  version: 1.0.0
+  summary: Read-only access to Melorra's jewellery catalogue and seasonal collections.
+  description: Public, read-only JSON API behind www.melorra.com. No authentication is required. Filter values are matched exactly and are case-sensitive (for example wear_type=Rings and type=Gold, but gender=women). List responses are paginated 20 items per page; follow the `next` URL to page through results. Prices are in INR. Product page URLs are relative to https://www.melorra.com and product image paths are relative to the response's base_image_path.
+  contact:
+    name: Melorra
+    url: https://www.melorra.com/contactus/
+servers:
+- url: https://services-catalog.melorra.com/api
+security: []
+tags:
+- name: Collections
+paths:
+  /collections/collection-details/:
+    get:
+      operationId: listSeasons
+      summary: List collection seasons
+      parameters:
+      - name: year__gte
+        in: query
+        description: Only seasons from this year onwards.
+        schema:
+          type: integer
+        example: 2018
+      responses:
+        '200':
+          description: Seasons, newest first. Each has a `code` (e.g. `W26`) and a `title` (e.g. `Autumn / Winter 2026`).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                        title:
+                          type: string
+      tags:
+      - Collections
+  /collections/collection-trends/:
+    get:
+      operationId: listSeasonCollections
+      summary: List the collections in a season
+      parameters:
+      - name: season
+        in: query
+        required: true
+        description: Season code from listSeasons, e.g. `W26`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Collections for the season in `results.collections[0].desktop`; each entry has a `trend_name` and a site `link` such as `/jewellery/collection/W26/belt-charms/`.
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - Collections
+  /collections/collection-products/:
+    get:
+      operationId: listCollectionProducts
+      summary: List the products in a collection
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - name: season
+        in: query
+        required: true
+        description: Season code, e.g. `W26`.
+        schema:
+          type: string
+      - name: trend
+        in: query
+        required: true
+        description: Collection trend name, matched exactly and case-sensitively, e.g. `Belt Charms`, `Knits and Knots`, `LBD`. URL-encode it (`Tie & Dye` becomes `Tie%20%26%20Dye`).
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A page of the collection's products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+      tags:
+      - Collections
+components:
+  schemas:
+    Currency:
+      type: object
+      properties:
+        code:
+          type: string
+          example: INR
+        symbol:
+          type: string
+    ProductList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total matching products.
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: URL of the next page, or null on the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+        results:
+          type: object
+          properties:
+            base_image_path:
+              type: string
+              format: uri
+              description: Prefix for every path in a product's images.
+            products:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+        currency:
+          $ref: '#/components/schemas/Currency'
+    Product:
+      type: object
+      properties:
+        sku:
+          type: integer
+        product_title:
+          type: string
+        price:
+          type: number
+          description: List price (MRP) in INR.
+        special_price:
+          type: number
+          description: Selling price in INR.
+        discount_message:
+          type: string
+        wear_type:
+          type: string
+        type:
+          type: string
+        category_name:
+          type: string
+        nav_menu:
+          type: string
+        trend:
+          type: string
+        set_name:
+          type: string
+        melorraProductUrl:
+          type: string
+          description: Product page path, relative to https://www.melorra.com.
+        images:
+          type: object
+          properties:
+            product_images:
+              type: array
+              items:
+                type: string
+              description: Image paths, relative to base_image_path.
+        status:
+          type: boolean
+  parameters:
+    page:
+      name: page
+      in: query
+      description: 1-based page number (20 items per page).
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+externalDocs:
+  description: Agent guide to browsing the Melorra catalogue
+  url: https://www.melorra.com/.well-known/agent-skills/melorra-catalog/SKILL.md
