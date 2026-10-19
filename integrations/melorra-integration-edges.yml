@@ -1,16 +1,80 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/melorra/integrations
 - https://n8n.io/integrations/melorra/
 - https://composio.dev/toolkits/melorra
 - https://monid.ai/tools/melorra
 checked:
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/melorra
+- https://crates.io/api/v1
 - https://monid.ai/tools/melorra
 - https://n8n.io/integrations/melorra/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://zapier.com/apps/melorra/integrations
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@melorra/component
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@melorra/component'
+      version: 0.0.9
+      released: '2023-11-16'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@melorra/component
+      repo_leg: github-org:melorratech
+      publisher_leg: email:melorra.com
+      matched_by: domain
+    - name: '@melorra/platform'
+      version: 0.0.2
+      released: '2023-10-19'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@melorra/platform
+      repo_leg: github-org:melorratech
+      publisher_leg: email:melorra.com
+      matched_by: domain
+    - name: '@melorra/schema'
+      version: 0.0.3
+      released: '2023-11-08'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@melorra/schema
+      repo_leg: github-org:melorratech
+      publisher_leg: email:melorra.com
+      matched_by: domain
+    - name: '@melorra/types'
+      version: 0.0.2
+      released: '2023-10-13'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@melorra/types
+      repo_leg: github-org:melorratech
+      publisher_leg: email:melorra.com
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
