@@ -209,3 +209,9 @@ components:
 externalDocs:
   description: Agent guide to browsing the Melorra catalogue
   url: https://www.melorra.com/.well-known/agent-skills/melorra-catalog/SKILL.md
+x-provenance:
+  method: harvested
+  publisher: Melorra
+  source: https://www.melorra.com/api-docs/catalog-openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
