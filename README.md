@@ -64,8 +64,117 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Melorra is an Indian direct-to-consumer fine jewellery brand, founded in 2015 and operated by August Jewellery Pvt Ltd, selling lightweight, fashion-led gold, diamond, gemstone and silver jewellery designed for everyday and workwear rather than for weddings. It sells online at melorra.com and through an app and a network of experience centres. Melorra runs a public, unauthenticated catalog API at services-catalog.melorra.com and publishes both an `llms.txt` and a machine-readable `/.well-known/api-catalog` document describing it. In January 2026 Senco Gold agreed to acquire a controlling 68% stake in August Jewellery.
+Melorra is an Indian direct-to-consumer fine jewellery brand, founded in 2015 and operated by August Jewellery Pvt Ltd, selling lightweight, fashion-led gold, diamond, gemstone and silver jewellery designed for everyday and workwear rather than for weddings. It sells online at melorra.com and through an app and a network of experience centres, delivering BIS-hallmarked gold and IGI/SGL-certified stones across hundreds of Indian districts. Melorra runs a public, unauthenticated catalog API at services-catalog.melorra.com and — unusually for a retailer — publishes both an llms.txt and a machine-readable /.well-known/api-catalog document describing it, giving AI agents a documented path into a 21,000-product jewellery catalog. In January 2026 Senco Gold agreed to acquire a controlling 68% stake in August Jewellery.
 
-- https://www.melorra.com/
-- https://www.melorra.com/.well-known/api-catalog
-- https://www.melorra.com/llms.txt
+**Areas:** Company · Jewellery · Retail · E-Commerce · Product Catalog · Direct to Consumer · Fashion · India
+
+## Melorra on APIs.io
+
+Everything profiled for Melorra is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/melorra/](https://apis.io/providers/melorra/)** — or go straight to one of the APIs or properties below.
+
+### APIs (4)
+
+- [Melorra Discovery API](https://apis.io/apis/melorra/melorra-discovery-api/) — The API root index the catalog backend serves
+- [Melorra Products API](https://apis.io/apis/melorra/melorra-products-api/) — Gold, diamond and gemstone product listing and detail
+- [Melorra Recommendations API](https://apis.io/apis/melorra/melorra-recommendations-api/) — Similar and recommended products
+- [Melorra Silver API](https://apis.io/apis/melorra/melorra-silver-api/) — The silver product line, served by parallel endpoints
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [melorra-mcp.yml](https://apis.io/servers/melorra/melorra-mcp-yml/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Melorra Catalog Api Overlay](https://apis.io/overlays/melorra/melorra-catalog-api-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Melorra Authentication](https://apis.io/security/melorra/melorra-authentication/)
+- [Melorra Domain Security](https://apis.io/security/melorra/melorra-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Melorra Plans Pricing](https://apis.io/plans/melorra/melorra-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Melorra Rate Limits](https://apis.io/rate-limits/melorra/melorra-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.melorra.com/)
+- [Documentation](https://www.melorra.com/.well-known/api-catalog)
+- [Sign up](https://www.melorra.com/sign-in/)
+- [Support](https://www.melorra.com/contactus/)
+- [Blog](https://www.melorra.com/press/)
+- [Privacy policy](https://www.melorra.com/privacy-policy/)
+- [GitHub](https://github.com/MelorraTech)
+
+## API Evangelist rating
+
+**Kin Score 23.6** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 83.9 |
+| Contract quality | 12.9 |
+| Contract governance | 0.0 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 23.7 |
+
+**Agent readiness 29.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 20.6** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/melorra/](https://apis.io/providers/melorra/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Melorra: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/melorra/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
